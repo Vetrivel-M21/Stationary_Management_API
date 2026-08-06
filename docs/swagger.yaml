@@ -1,0 +1,87 @@
+openapi: 3.0.0
+info:
+  title: Stationery Management System API
+  description: Enterprise API for managing stationery requests across multiple branches, approvals, deliveries, verifications, monitoring, and audit trails.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080/api/v1
+    description: Local Development Server
+paths:
+  /auth/login:
+    post:
+      summary: User Login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [mobile, password]
+              properties:
+                mobile:
+                  type: string
+                  example: "09999999999"
+                password:
+                  type: string
+                  example: "Admin@123"
+      responses:
+        '200':
+          description: Successful Authentication
+  /auth/me:
+    get:
+      summary: Get Current Authenticated User Profile
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Profile Details
+  /products:
+    get:
+      summary: List Products
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: category
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of Products
+  /requests:
+    post:
+      summary: Submit Stationery Request
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [branchId, items]
+              properties:
+                branchId:
+                  type: integer
+                items:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      productId:
+                        type: integer
+                      requestedQty:
+                        type: integer
+      responses:
+        '201':
+          description: Request Submitted
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

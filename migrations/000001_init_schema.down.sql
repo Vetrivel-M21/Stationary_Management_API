@@ -1,0 +1,13 @@
+DROP TABLE IF EXISTS email_queue;
+DROP TABLE IF EXISTS audit_logs;
+DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS verification_items;
+DROP TABLE IF EXISTS delivery_items;
+DROP TABLE IF EXISTS deliveries;
+DROP TABLE IF EXISTS approval_items;
+DROP TABLE IF EXISTS request_items;
+DROP TABLE IF EXISTS requests;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS branches;
+DROP TABLE IF EXISTS roles;

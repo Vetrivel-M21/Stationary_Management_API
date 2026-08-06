@@ -1,0 +1,27 @@
+# Binaries and Executables
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+server
+bin/
+
+# Environment Variables & Local Config
+.env
+.env.local
+.env.*.local
+
+# Go build & test cache
+*.out
+*.test
+coverage.txt
+vendor/
+
+# System and IDE Files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.tmp
