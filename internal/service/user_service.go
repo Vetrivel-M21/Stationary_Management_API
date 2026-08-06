@@ -25,6 +25,37 @@ func (s *UserService) GetUserByID(id uint) (*domain.User, error) {
 }
 
 func (s *UserService) CreateUser(req *domain.CreateUserRequest, actorID uint, actorName, ip string) (*domain.User, error) {
+	// Role-specific constraints & validations
+	switch req.RoleID {
+	case 2: // BRANCH_REQUESTER (Shared Requester account)
+		count, err := s.userRepo.CountByRoleName("BRANCH_REQUESTER")
+		if err != nil {
+			return nil, err
+		}
+		if count > 0 {
+			return nil, errors.New("A shared Requester account already exists in the system. Only one shared Requester account is allowed.")
+		}
+		req.BranchID = nil // Shared requester account is global
+	case 4: // AGENCY (Global delivery agency)
+		count, err := s.userRepo.CountByRoleName("AGENCY")
+		if err != nil {
+			return nil, err
+		}
+		if count > 0 {
+			return nil, errors.New("An Agency account already exists in the system. Only one Agency account is allowed.")
+		}
+		req.BranchID = nil
+	case 5: // MONITOR
+		if req.Department == "" {
+			return nil, errors.New("Department selection is required for Monitor role.")
+		}
+		req.BranchID = nil
+	case 3: // APPROVER
+		if req.Department == "" {
+			return nil, errors.New("Department selection is required for Approver role.")
+		}
+	}
+
 	hashedPassword, err := hash.HashPassword(req.DefaultPassword)
 	if err != nil {
 		return nil, err
@@ -140,3 +171,30 @@ func (s *UserService) ResetPassword(userID uint, newPassword string, actorID uin
 
 	return nil
 }
+
+func (s *UserService) DeleteUser(userID uint, actorID uint, actorName, ip string) error {
+	user, err := s.userRepo.FindByID(userID)
+	if err != nil {
+		return errors.New("user not found")
+	}
+
+	if user.Role.Name == "ADMIN" || user.ID == actorID {
+		return errors.New("cannot delete the primary admin user account")
+	}
+
+	if err := s.userRepo.Delete(userID); err != nil {
+		return err
+	}
+
+	s.auditRepo.Create(&domain.AuditLog{
+		UserID:     &actorID,
+		UserName:   actorName,
+		Action:     "DELETE_USER",
+		EntityType: "USER",
+		EntityID:   user.Email,
+		IPAddress:  ip,
+	})
+
+	return nil
+}
+

@@ -92,3 +92,22 @@ func (h *UserHandler) ResetPassword(c *gin.Context) {
 
 	response.JSONSuccess(c, 200, "User password reset successfully", nil)
 }
+
+func (h *UserHandler) DeleteUser(c *gin.Context) {
+	idParam, err := strconv.Atoi(c.Param("id"))
+	if err != nil {
+		response.BadRequest(c, "Invalid user ID")
+		return
+	}
+
+	actorID := c.MustGet("userID").(uint)
+	actorEmail := c.MustGet("userEmail").(string)
+
+	if err := h.userSvc.DeleteUser(uint(idParam), actorID, actorEmail, c.ClientIP()); err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.JSONSuccess(c, 200, "User deleted successfully", nil)
+}
+

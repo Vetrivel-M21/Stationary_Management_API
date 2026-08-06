@@ -103,3 +103,24 @@ func (r *UserRepository) FindByRoleName(roleName string) ([]domain.User, error) 
 		Find(&users).Error
 	return users, err
 }
+
+func (r *UserRepository) CountByRoleName(roleName string) (int64, error) {
+	if r.db == nil {
+		return 0, errors.New("database connection unavailable")
+	}
+	var count int64
+	err := r.db.Model(&domain.User{}).
+		Joins("JOIN roles ON roles.id = users.role_id").
+		Where("roles.name = ? AND users.status = ?", roleName, "ACTIVE").
+		Count(&count).Error
+	return count, err
+}
+
+func (r *UserRepository) Delete(id uint) error {
+	if r.db == nil {
+		return errors.New("database connection unavailable")
+	}
+	return r.db.Delete(&domain.User{}, id).Error
+}
+
+
