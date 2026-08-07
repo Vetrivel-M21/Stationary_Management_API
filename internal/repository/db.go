@@ -174,7 +174,7 @@ func SeedInitialData(db *gorm.DB) {
 
 	// Define Seed Users - Admin Only
 	seedUsers := []domain.User{
-		{ID: 1, Name: "System Administrator", Email: "admin@stationery.com", Mobile: "09999999999", Password: hashedPassword, RoleID: 1, BranchID: &branchHQ, ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
+		{ID: 1, Name: "System Administrator", Email: "admin@stationery.com", Mobile: "9999999999", Password: hashedPassword, RoleID: 1, BranchID: &branchHQ, ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
 	}
 
 	for _, su := range seedUsers {
