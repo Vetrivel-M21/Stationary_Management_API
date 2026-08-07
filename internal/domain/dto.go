@@ -80,7 +80,8 @@ type CreateRequestItemInput struct {
 }
 
 type CreateRequestDTO struct {
-	BranchID        uint                     `json:"branchId" binding:"required"`
+	BranchID        uint                     `json:"branchId"`
+	BranchName      string                   `json:"branchName"`
 	ApplicantName   string                   `json:"applicantName" binding:"required"`
 	ApplicantMobile string                   `json:"applicantMobile" binding:"required"`
 	ApplicantEmail  string                   `json:"applicantEmail" binding:"required"`

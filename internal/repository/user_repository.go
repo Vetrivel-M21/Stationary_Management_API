@@ -3,6 +3,7 @@ package repository
 import (
 	"errors"
 	"strings"
+	"time"
 	"stationery-management/internal/domain"
 
 	"gorm.io/gorm"
@@ -116,11 +117,43 @@ func (r *UserRepository) CountByRoleName(roleName string) (int64, error) {
 	return count, err
 }
 
+func (r *UserRepository) CountByRoleAndDepartment(roleID uint, department string, excludeUserID uint) (int64, error) {
+	if r.db == nil {
+		return 0, errors.New("database connection unavailable")
+	}
+	var count int64
+	query := r.db.Model(&domain.User{}).
+		Where("role_id = ? AND department = ? AND status = ?", roleID, department, "ACTIVE")
+	if excludeUserID > 0 {
+		query = query.Where("id != ?", excludeUserID)
+	}
+	err := query.Count(&count).Error
+	return count, err
+}
+
+func (r *UserRepository) CountByRoleID(roleID uint, excludeUserID uint) (int64, error) {
+	if r.db == nil {
+		return 0, errors.New("database connection unavailable")
+	}
+	var count int64
+	query := r.db.Model(&domain.User{}).
+		Where("role_id = ? AND status = ?", roleID, "ACTIVE")
+	if excludeUserID > 0 {
+		query = query.Where("id != ?", excludeUserID)
+	}
+	err := query.Count(&count).Error
+	return count, err
+}
+
 func (r *UserRepository) Delete(id uint) error {
 	if r.db == nil {
 		return errors.New("database connection unavailable")
 	}
-	return r.db.Delete(&domain.User{}, id).Error
+	now := time.Now()
+	return r.db.Model(&domain.User{}).Where("id = ?", id).Updates(map[string]interface{}{
+		"status":     "INACTIVE",
+		"deleted_at": &now,
+	}).Error
 }
 
 

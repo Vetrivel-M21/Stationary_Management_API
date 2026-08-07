@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"stationery-management/internal/domain"
 	"stationery-management/internal/service"
+	"stationery-management/pkg/response"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,64 +20,51 @@ func NewSlaHandler(slaSvc service.SlaService) *SlaHandler {
 func (h *SlaHandler) GetSlaSettings(c *gin.Context) {
 	settings, err := h.slaSvc.GetSlaSettings()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response.InternalError(c, err.Error())
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"data":    settings,
-	})
+	response.JSONSuccess(c, http.StatusOK, "SLA settings retrieved successfully", settings)
 }
 
 func (h *SlaHandler) UpdateSlaSettings(c *gin.Context) {
-	currentUserVal, exists := c.Get("currentUser")
+	userIDVal, exists := c.Get("userID")
 	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
+		response.Unauthorized(c, "Unauthorized access")
 		return
 	}
-	user := currentUserVal.(*domain.User)
+	userID := userIDVal.(uint)
+	userEmail := c.GetString("userEmail")
 
 	var dto domain.UpdateSlaSettingsDTO
 	if err := c.ShouldBindJSON(&dto); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		response.BadRequest(c, "Invalid SLA settings payload", err.Error())
 		return
 	}
 
-	settings, err := h.slaSvc.UpdateSlaSettings(user, dto)
+	settings, err := h.slaSvc.UpdateSlaSettings(userID, userEmail, c.ClientIP(), dto)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"data":    settings,
-	})
+	response.JSONSuccess(c, http.StatusOK, "SLA thresholds updated successfully", settings)
 }
 
 func (h *SlaHandler) GetDelayedOrders(c *gin.Context) {
-	currentUserVal, exists := c.Get("currentUser")
-	if !exists {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "Unauthorized"})
-		return
-	}
-	user := currentUserVal.(*domain.User)
-
+	userRole := c.GetString("userRole")
 	deptFilter := ""
-	if user.Role.Name == "MONITOR" || user.Role.Name == "APPROVER" {
-		deptFilter = user.Department
-	} else if c.Query("department") != "" {
+	if userRole == "MONITOR" || userRole == "APPROVER" {
+		deptFilter = c.GetString("department")
+	}
+	if deptFilter == "" && c.Query("department") != "" {
 		deptFilter = c.Query("department")
 	}
 
 	delayedOrders, err := h.slaSvc.GetDelayedOrders(deptFilter)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		response.InternalError(c, err.Error())
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"success": true,
-		"data":    delayedOrders,
-	})
+	response.JSONSuccess(c, http.StatusOK, "Delayed orders retrieved successfully", delayedOrders)
 }

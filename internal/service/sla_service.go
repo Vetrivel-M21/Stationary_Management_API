@@ -10,7 +10,7 @@ import (
 
 type SlaService interface {
 	GetSlaSettings() (*domain.SlaSettings, error)
-	UpdateSlaSettings(admin *domain.User, input domain.UpdateSlaSettingsDTO) (*domain.SlaSettings, error)
+	UpdateSlaSettings(actorID uint, actorEmail, ip string, input domain.UpdateSlaSettingsDTO) (*domain.SlaSettings, error)
 	GetDelayedOrders(departmentFilter string) ([]domain.DelayedOrderDTO, error)
 }
 
@@ -36,7 +36,7 @@ func (s *slaService) GetSlaSettings() (*domain.SlaSettings, error) {
 	return s.slaRepo.GetSlaSettings()
 }
 
-func (s *slaService) UpdateSlaSettings(admin *domain.User, input domain.UpdateSlaSettingsDTO) (*domain.SlaSettings, error) {
+func (s *slaService) UpdateSlaSettings(actorID uint, actorEmail, ip string, input domain.UpdateSlaSettingsDTO) (*domain.SlaSettings, error) {
 	settings, err := s.slaRepo.GetSlaSettings()
 	if err != nil {
 		return nil, err
@@ -51,11 +51,12 @@ func (s *slaService) UpdateSlaSettings(admin *domain.User, input domain.UpdateSl
 	}
 
 	s.auditRepo.Create(&domain.AuditLog{
-		UserID:     &admin.ID,
-		UserName:   admin.Name,
+		UserID:     &actorID,
+		UserName:   actorEmail,
 		Action:     "UPDATE_SLA_SETTINGS",
 		EntityType: "SYSTEM",
 		EntityID:   "1",
+		IPAddress:  ip,
 		Details:    fmt.Sprintf("Updated SLA Max Days: Approve=%d, Delivery=%d, Verify=%d", input.MaxApproveDays, input.MaxDeliveryDays, input.MaxVerifyDays),
 	})
 

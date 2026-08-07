@@ -1,8 +1,11 @@
 package repository
 
 import (
-	"stationery-management/internal/domain"
+	"errors"
+	"fmt"
+	"strings"
 	"time"
+	"stationery-management/internal/domain"
 
 	"gorm.io/gorm"
 )
@@ -13,6 +16,52 @@ type RequestRepository struct {
 
 func NewRequestRepository(db *gorm.DB) *RequestRepository {
 	return &RequestRepository{db: db}
+}
+
+func (r *RequestRepository) FindOrCreateBranchByName(name string) (*domain.Branch, error) {
+	name = strings.TrimSpace(name)
+	if name == "" {
+		var defaultBranch domain.Branch
+		if err := r.db.First(&defaultBranch).Error; err == nil {
+			return &defaultBranch, nil
+		}
+		return nil, errors.New("branch name required")
+	}
+
+	var branch domain.Branch
+	if err := r.db.Where("LOWER(name) = ?", strings.ToLower(name)).First(&branch).Error; err == nil {
+		return &branch, nil
+	}
+
+	code := fmt.Sprintf("BR-%d", time.Now().UnixNano()%10000)
+	newBranch := domain.Branch{
+		Name:   name,
+		Code:   code,
+		Status: "ACTIVE",
+	}
+	if err := r.db.Create(&newBranch).Error; err != nil {
+		var defaultBranch domain.Branch
+		if err := r.db.First(&defaultBranch).Error; err == nil {
+			return &defaultBranch, nil
+		}
+		return nil, err
+	}
+	return &newBranch, nil
+}
+
+func (r *RequestRepository) GenerateUniqueRequestNo() string {
+	dateStr := time.Now().Format("20060102")
+	for i := 0; i < 20; i++ {
+		randVal := (time.Now().UnixNano()/1000 + int64(i*37))%9000 + 1000
+		candidate := fmt.Sprintf("REQ-%s-%d", dateStr, randVal)
+
+		var count int64
+		r.db.Model(&domain.Request{}).Where("request_no = ?", candidate).Count(&count)
+		if count == 0 {
+			return candidate
+		}
+	}
+	return fmt.Sprintf("REQ-%s-%d", time.Now().Format("20060102150405"), (time.Now().UnixNano()/1000)%1000)
 }
 
 func (r *RequestRepository) Create(req *domain.Request) error {
@@ -27,6 +76,7 @@ func (r *RequestRepository) FindByID(id uint) (*domain.Request, error) {
 		Preload("Items.ApprovalItem.Approver").
 		Preload("Deliveries.DeliveryAgent").
 		Preload("Deliveries.Items.Product").
+		Preload("Deliveries.Items.VerificationItem").
 		Where("id = ?", id).
 		First(&req).Error
 	if err != nil {
@@ -50,7 +100,8 @@ func (r *RequestRepository) FindAll(branchID *uint, requesterID *uint, departmen
 		Preload("Items.Product").
 		Preload("Items.ApprovalItem.Approver").
 		Preload("Deliveries.DeliveryAgent").
-		Preload("Deliveries.Items.Product")
+		Preload("Deliveries.Items.Product").
+		Preload("Deliveries.Items.VerificationItem")
 
 	if branchID != nil {
 		query = query.Where("branch_id = ?", *branchID)
