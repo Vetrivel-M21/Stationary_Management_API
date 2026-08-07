@@ -2,7 +2,6 @@ package service
 
 import (
 	"errors"
-	"fmt"
 	"stationery-management/internal/domain"
 	"stationery-management/internal/repository"
 	"time"
@@ -19,7 +18,7 @@ func NewRequestService(reqRepo *repository.RequestRepository, userRepo *reposito
 }
 
 func (s *RequestService) CreateRequest(requesterID uint, dto *domain.CreateRequestDTO, actorName, ip string) (*domain.Request, error) {
-	reqNo := fmt.Sprintf("REQ-%s-%d", time.Now().Format("20060102"), time.Now().UnixNano()%10000)
+	reqNo := s.reqRepo.GenerateUniqueRequestNo()
 
 	var items []domain.RequestItem
 	for _, item := range dto.Items {
@@ -30,9 +29,20 @@ func (s *RequestService) CreateRequest(requesterID uint, dto *domain.CreateReque
 		})
 	}
 
+	targetBranchID := dto.BranchID
+	if targetBranchID == 0 && dto.BranchName != "" {
+		b, err := s.reqRepo.FindOrCreateBranchByName(dto.BranchName)
+		if err == nil && b != nil {
+			targetBranchID = b.ID
+		}
+	}
+	if targetBranchID == 0 {
+		targetBranchID = 1
+	}
+
 	req := &domain.Request{
 		RequestNo:       reqNo,
-		BranchID:        dto.BranchID,
+		BranchID:        targetBranchID,
 		RequesterID:     requesterID,
 		ApplicantName:   dto.ApplicantName,
 		ApplicantMobile: dto.ApplicantMobile,
@@ -166,14 +176,21 @@ func (s *RequestService) ProcessDelivery(requestID uint, agencyID uint, dto *dom
 		return nil, errors.New("request is not pending delivery")
 	}
 
-	var deliveryItems []domain.DeliveryItem
-	allFullyDelivered := true
+	totalDeliveredMap := make(map[uint]int)
+	totalUnavailableMap := make(map[uint]int)
 
-	for _, item := range dto.Items {
-		pending := item.ApprovedQty - (item.DeliveredQty + item.UnavailableQty)
-		if pending > 0 {
-			allFullyDelivered = false
+	for _, d := range req.Deliveries {
+		for _, di := range d.Items {
+			totalDeliveredMap[di.ProductID] += di.DeliveredQty
+			totalUnavailableMap[di.ProductID] += di.UnavailableQty
 		}
+	}
+
+	var deliveryItems []domain.DeliveryItem
+	for _, item := range dto.Items {
+		totalDeliveredMap[item.ProductID] += item.DeliveredQty
+		totalUnavailableMap[item.ProductID] += item.UnavailableQty
+
 		deliveryItems = append(deliveryItems, domain.DeliveryItem{
 			ProductID:      item.ProductID,
 			ApprovedQty:    item.ApprovedQty,
@@ -187,6 +204,23 @@ func (s *RequestService) ProcessDelivery(requestID uint, agencyID uint, dto *dom
 		if item.UnitPrice > 0 {
 			_ = s.reqRepo.UpdateItemUnitPrice(requestID, item.ProductID, item.UnitPrice)
 			_ = s.reqRepo.UpdateProductUnitPrice(item.ProductID, item.UnitPrice)
+		}
+	}
+
+	allFullyDelivered := true
+	for _, reqItem := range req.Items {
+		approvedQty := reqItem.RequestedQty
+		if reqItem.ApprovalItem != nil {
+			approvedQty = reqItem.ApprovalItem.ApprovedQty
+		}
+		if approvedQty <= 0 {
+			continue
+		}
+		cumDelivered := totalDeliveredMap[reqItem.ProductID]
+		cumUnavailable := totalUnavailableMap[reqItem.ProductID]
+		if cumDelivered+cumUnavailable < approvedQty {
+			allFullyDelivered = false
+			break
 		}
 	}
 

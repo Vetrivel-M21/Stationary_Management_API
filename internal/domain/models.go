@@ -13,13 +13,14 @@ type Role struct {
 }
 
 type Branch struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
-	Name      string    `gorm:"size:100;not null" json:"name"`
-	Code      string    `gorm:"size:20;unique;not null" json:"code"`
-	Address   string    `gorm:"type:text" json:"address"`
-	Status    string    `gorm:"size:20;default:'ACTIVE'" json:"status"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID        uint           `gorm:"primaryKey" json:"id"`
+	Name      string         `gorm:"size:100;not null" json:"name"`
+	Code      string         `gorm:"size:20;unique;not null" json:"code"`
+	Address   string         `gorm:"type:text" json:"address"`
+	Status    string         `gorm:"size:20;default:'ACTIVE'" json:"status"`
+	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
 }
 
 type User struct {
@@ -36,6 +37,7 @@ type User struct {
 	ApproverAccessType string         `gorm:"size:20;default:'ALL_BRANCHES'" json:"approverAccessType"`
 	Status             string         `gorm:"size:20;default:'ACTIVE'" json:"status"`
 	FirstLogin         bool           `gorm:"default:false" json:"firstLogin"`
+	DeletedAt          gorm.DeletedAt `gorm:"index" json:"-"`
 	CreatedAt          time.Time      `json:"createdAt"`
 	UpdatedAt          time.Time      `json:"updatedAt"`
 }
@@ -72,6 +74,7 @@ type Request struct {
 	SubmittedAt     time.Time     `json:"submittedAt"`
 	ApprovedAt      *time.Time    `json:"approvedAt,omitempty"`
 	CompletedAt     *time.Time    `json:"completedAt,omitempty"`
+	DeletedAt       gorm.DeletedAt `gorm:"index" json:"-"`
 	CreatedAt       time.Time     `json:"createdAt"`
 	UpdatedAt       time.Time     `json:"updatedAt"`
 }

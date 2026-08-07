@@ -1,7 +1,11 @@
 package response
 
 import (
+	"errors"
 	"net/http"
+	"path/filepath"
+	"runtime"
+	"stationery-management/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,20 +26,40 @@ func JSONSuccess(c *gin.Context, statusCode int, message string, data interface{
 	})
 }
 
-func JSONError(c *gin.Context, statusCode int, message string, errorCode string, errors ...string) {
-	if len(errors) == 0 {
-		errors = []string{message}
+func JSONError(c *gin.Context, statusCode int, message string, errorCode string, errs ...string) {
+	if len(errs) == 0 {
+		errs = []string{message}
 	}
+
+	// Auto-detect caller folder, file, and handler function name for unique error code (e.g. UKJ001)
+	folder := "handler"
+	file := "handler"
+	fnName := "Handler"
+	pc, fileP, _, ok := runtime.Caller(2)
+	if ok {
+		file = filepath.Base(fileP)
+		dir := filepath.Dir(fileP)
+		folder = filepath.Base(dir)
+		if fn := runtime.FuncForPC(pc); fn != nil {
+			fnName = fn.Name()
+		}
+	}
+
+	uniqueCode := logger.LogWithCode(folder, file, fnName, errors.New(message))
+	if errorCode == "" || errorCode == "BAD_REQUEST" || errorCode == "INTERNAL_SERVER_ERROR" {
+		errorCode = uniqueCode
+	}
+
 	c.JSON(statusCode, APIResponse{
 		Success:   false,
 		Message:   message,
 		ErrorCode: errorCode,
-		Errors:    errors,
+		Errors:    errs,
 	})
 }
 
 func BadRequest(c *gin.Context, message string, errs ...string) {
-	JSONError(c, http.StatusBadRequest, message, "BAD_REQUEST", errs...)
+	JSONError(c, http.StatusBadRequest, message, "", errs...)
 }
 
 func Unauthorized(c *gin.Context, message string) {
@@ -51,5 +75,5 @@ func NotFound(c *gin.Context, message string) {
 }
 
 func InternalError(c *gin.Context, message string) {
-	JSONError(c, http.StatusInternalServerError, message, "INTERNAL_SERVER_ERROR")
+	JSONError(c, http.StatusInternalServerError, message, "")
 }

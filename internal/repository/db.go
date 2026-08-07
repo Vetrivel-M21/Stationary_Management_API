@@ -37,6 +37,22 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 		return nil, err
 	}
 
+	// Safely clean up legacy FK constraints only if present in MySQL
+	var count1, count2 int64
+	db.Raw("SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_schema = DATABASE() AND table_name = 'users' AND constraint_name = 'users_ibfk_1'").Scan(&count1)
+	if count1 > 0 {
+		_ = db.Exec("ALTER TABLE `users` DROP FOREIGN KEY `users_ibfk_1`").Error
+	}
+	db.Raw("SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_schema = DATABASE() AND table_name = 'users' AND constraint_name = 'users_ibfk_2'").Scan(&count2)
+	if count2 > 0 {
+		_ = db.Exec("ALTER TABLE `users` DROP FOREIGN KEY `users_ibfk_2`").Error
+	}
+
+	_ = db.Exec("ALTER TABLE `roles` MODIFY `id` BIGINT UNSIGNED AUTO_INCREMENT").Error
+	_ = db.Exec("ALTER TABLE `branches` MODIFY `id` BIGINT UNSIGNED AUTO_INCREMENT").Error
+	_ = db.Exec("ALTER TABLE `users` MODIFY `role_id` BIGINT UNSIGNED NOT NULL").Error
+	_ = db.Exec("ALTER TABLE `users` MODIFY `branch_id` BIGINT UNSIGNED").Error
+
 	// Auto-migrate tables
 	err = db.AutoMigrate(
 		&domain.Role{},
@@ -97,8 +113,17 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	if !db.Migrator().HasColumn(&domain.Delivery{}, "bill_notes") {
 		_ = db.Migrator().AddColumn(&domain.Delivery{}, "bill_notes")
 	}
-	if !db.Migrator().HasColumn(&domain.DeliveryItem{}, "unit_price") {
-		_ = db.Migrator().AddColumn(&domain.DeliveryItem{}, "unit_price")
+	if !db.Migrator().HasColumn(&domain.User{}, "deleted_at") {
+		_ = db.Migrator().AddColumn(&domain.User{}, "deleted_at")
+	}
+	if !db.Migrator().HasColumn(&domain.Branch{}, "deleted_at") {
+		_ = db.Migrator().AddColumn(&domain.Branch{}, "deleted_at")
+	}
+	if !db.Migrator().HasColumn(&domain.Product{}, "deleted_at") {
+		_ = db.Migrator().AddColumn(&domain.Product{}, "deleted_at")
+	}
+	if !db.Migrator().HasColumn(&domain.Request{}, "deleted_at") {
+		_ = db.Migrator().AddColumn(&domain.Request{}, "deleted_at")
 	}
 
 	SeedInitialData(db)
@@ -133,7 +158,6 @@ func SeedInitialData(db *gorm.DB) {
 
 	hashedPassword, _ := hash.HashPassword("Admin@123")
 	branchHQ := uint(1)
-	branchNorth := uint(2)
 
 	// Seed or update SLA Settings
 	var slaCount int64
@@ -148,17 +172,9 @@ func SeedInitialData(db *gorm.DB) {
 		db.Create(&sla)
 	}
 
-	// Define Seed Users
+	// Define Seed Users - Admin Only
 	seedUsers := []domain.User{
 		{ID: 1, Name: "System Administrator", Email: "admin@stationery.com", Mobile: "09999999999", Password: hashedPassword, RoleID: 1, BranchID: &branchHQ, ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 2, Name: "Shared Requester Account", Email: "requester@stationery.com", Mobile: "09888888888", Password: hashedPassword, RoleID: 2, BranchID: &branchNorth, ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 3, Name: "Gold Loan Approver", Email: "approver_gl@stationery.com", Mobile: "09777777777", Password: hashedPassword, RoleID: 3, BranchID: &branchNorth, Department: "GOLD LOAN", ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 4, Name: "Express Delivery Agency", Email: "agency@stationery.com", Mobile: "09666666666", Password: hashedPassword, RoleID: 4, BranchID: nil, ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 5, Name: "Gold Loan Monitor", Email: "monitor_gl@stationery.com", Mobile: "09555555555", Password: hashedPassword, RoleID: 5, BranchID: nil, Department: "GOLD LOAN", ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 6, Name: "Chit Fund Approver", Email: "approver_cf@stationery.com", Mobile: "09777777778", Password: hashedPassword, RoleID: 3, BranchID: &branchNorth, Department: "CHIT FUND", ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 7, Name: "Others Approver", Email: "approver_others@stationery.com", Mobile: "09777777779", Password: hashedPassword, RoleID: 3, BranchID: &branchNorth, Department: "OTHERS", ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 8, Name: "Chit Fund Monitor", Email: "monitor_cf@stationery.com", Mobile: "09555555556", Password: hashedPassword, RoleID: 5, BranchID: nil, Department: "CHIT FUND", ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
-		{ID: 9, Name: "Others Monitor", Email: "monitor_others@stationery.com", Mobile: "09555555557", Password: hashedPassword, RoleID: 5, BranchID: nil, Department: "OTHERS", ApproverAccessType: "ALL_BRANCHES", Status: "ACTIVE", FirstLogin: false},
 	}
 
 	for _, su := range seedUsers {
