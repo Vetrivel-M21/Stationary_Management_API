@@ -14,7 +14,7 @@ import (
 
 func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	// First connect without DB name to ensure database exists
-	baseDSN := fmt.Sprintf("%s:%s@tcp(%s:%s)/?charset=utf8mb4&parseTime=True&loc=Local",
+	baseDSN := fmt.Sprintf("%s:%s@tcp(%s:%s)/?charset=utf8mb4&parseTime=True&loc=Local&timeout=3s",
 		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort)
 	
 	baseDB, err := gorm.Open(mysql.Open(baseDSN), &gorm.Config{})
@@ -27,7 +27,7 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 		}
 	}
 
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&timeout=3s",
 		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort, cfg.DBName)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
