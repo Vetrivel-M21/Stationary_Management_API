@@ -83,7 +83,15 @@ func main() {
 		MaxAge:           12 * time.Hour,
 	}))
 
-	// Health Check
+	// Root & Health Check
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"status":  "online",
+			"message": "Stationery Management System API is running",
+			"health":  "/health",
+		})
+	})
+
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"status":    "healthy",
