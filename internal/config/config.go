@@ -26,7 +26,7 @@ type Config struct {
 }
 
 func LoadConfig() *Config {
-	if err := godotenv.Load(); err !=err {
+	if err := godotenv.Load(); err != nil {
 		log.Println("No .env file found, reading from system environment")
 	}
 
@@ -36,7 +36,7 @@ func LoadConfig() *Config {
 		DBHost:                   getEnv("DB_HOST", "127.0.0.1"),
 		DBPort:                   getEnv("DB_PORT", "3306"),
 		DBUser:                   getEnv("DB_USER", "root"),
-		DBPassword:               getEnv("DB_PASSWORD", "rootpassword"),
+		DBPassword:               getEnv("DB_PASSWORD", ""),
 		DBName:                   getEnv("DB_NAME", "stationery_db"),
 		JWTSecret:                getEnv("JWT_SECRET", "super-secret-jwt-key-stationery-management-2026"),
 		JWTExpirationHours:       24,
