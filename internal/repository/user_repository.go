@@ -56,6 +56,32 @@ func (r *UserRepository) FindByMobile(mobile string) (*domain.User, error) {
 	return &user, nil
 }
 
+func (r *UserRepository) FindByName(name string) (*domain.User, error) {
+	if r.db == nil {
+		return nil, errors.New("database connection unavailable")
+	}
+	trimmed := strings.TrimSpace(name)
+	var user domain.User
+	err := r.db.Preload("Role").Preload("Branch").Where("LOWER(name) = LOWER(?)", trimmed).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *UserRepository) ExistsByName(name string, excludeUserID uint) (bool, error) {
+	if r.db == nil {
+		return false, errors.New("database connection unavailable")
+	}
+	var count int64
+	query := r.db.Model(&domain.User{}).Where("LOWER(name) = LOWER(?)", strings.TrimSpace(name))
+	if excludeUserID > 0 {
+		query = query.Where("id != ?", excludeUserID)
+	}
+	err := query.Count(&count).Error
+	return count > 0, err
+}
+
 func (r *UserRepository) FindByID(id uint) (*domain.User, error) {
 	if r.db == nil {
 		return nil, errors.New("database connection unavailable")

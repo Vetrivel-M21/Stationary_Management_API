@@ -28,7 +28,13 @@ func (h *RequestHandler) CreateRequest(c *gin.Context) {
 		return
 	}
 
-	result, err := h.reqSvc.CreateRequest(userID, &req, userEmail, c.ClientIP())
+	requester, err := h.userSvc.GetUserByID(userID)
+	if err != nil {
+		response.Unauthorized(c, "User session invalid")
+		return
+	}
+
+	result, err := h.reqSvc.CreateRequest(requester, &req, userEmail, c.ClientIP())
 	if err != nil {
 		response.BadRequest(c, err.Error())
 		return
@@ -125,7 +131,13 @@ func (h *RequestHandler) ProcessVerification(c *gin.Context) {
 		return
 	}
 
-	req, err := h.reqSvc.ProcessVerification(uint(idParam), userID, &dto, userEmail, c.ClientIP())
+	verifier, err := h.userSvc.GetUserByID(userID)
+	if err != nil {
+		response.Unauthorized(c, "User session invalid")
+		return
+	}
+
+	req, err := h.reqSvc.ProcessVerification(uint(idParam), verifier, &dto, userEmail, c.ClientIP())
 	if err != nil {
 		response.BadRequest(c, err.Error())
 		return

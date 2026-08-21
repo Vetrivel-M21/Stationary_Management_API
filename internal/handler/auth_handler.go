@@ -23,7 +23,7 @@ func (h *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	resp, err := h.authSvc.Login(req.Mobile, req.Password, c.ClientIP())
+	resp, err := h.authSvc.Login(req.Identifier, req.Password, c.ClientIP())
 	if err != nil {
 		response.BadRequest(c, err.Error())
 		return

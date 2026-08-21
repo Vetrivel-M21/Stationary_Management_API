@@ -16,10 +16,11 @@ paths:
           application/json:
             schema:
               type: object
-              required: [mobile, password]
+              required: [identifier, password]
               properties:
-                mobile:
+                identifier:
                   type: string
+                  description: Mobile number or username (name)
                   example: "09999999999"
                 password:
                   type: string

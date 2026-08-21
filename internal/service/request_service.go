@@ -17,8 +17,17 @@ func NewRequestService(reqRepo *repository.RequestRepository, userRepo *reposito
 	return &RequestService{reqRepo: reqRepo, userRepo: userRepo, auditRepo: auditRepo}
 }
 
-func (s *RequestService) CreateRequest(requesterID uint, dto *domain.CreateRequestDTO, actorName, ip string) (*domain.Request, error) {
+func (s *RequestService) CreateRequest(requester *domain.User, dto *domain.CreateRequestDTO, actorName, ip string) (*domain.Request, error) {
+	requesterID := requester.ID
 	reqNo := s.reqRepo.GenerateUniqueRequestNo()
+
+	department := dto.Department
+	if requester.Role.Name == "BRANCH_REQUESTER" {
+		if requester.Department == "" {
+			return nil, errors.New("Your account has no department assigned. Contact an admin.")
+		}
+		department = requester.Department
+	}
 
 	var items []domain.RequestItem
 	for _, item := range dto.Items {
@@ -47,7 +56,7 @@ func (s *RequestService) CreateRequest(requesterID uint, dto *domain.CreateReque
 		ApplicantName:   dto.ApplicantName,
 		ApplicantMobile: dto.ApplicantMobile,
 		ApplicantEmail:  dto.ApplicantEmail,
-		Department:      dto.Department,
+		Department:      department,
 		Location:        dto.Location,
 		Status:          "SUBMITTED",
 		Items:           items,
@@ -260,10 +269,15 @@ func (s *RequestService) ProcessDelivery(requestID uint, agencyID uint, dto *dom
 	return s.reqRepo.FindByID(req.ID)
 }
 
-func (s *RequestService) ProcessVerification(requestID uint, verifierID uint, dto *domain.ProcessVerificationDTO, actorName, ip string) (*domain.Request, error) {
+func (s *RequestService) ProcessVerification(requestID uint, verifier *domain.User, dto *domain.ProcessVerificationDTO, actorName, ip string) (*domain.Request, error) {
+	verifierID := verifier.ID
 	req, err := s.reqRepo.FindByID(requestID)
 	if err != nil {
 		return nil, errors.New("request not found")
+	}
+
+	if verifier.Role.Name == "BRANCH_REQUESTER" && req.RequesterID != verifierID {
+		return nil, errors.New("You can only verify requests you submitted.")
 	}
 
 	var verifications []domain.VerificationItem

@@ -22,6 +22,9 @@ func friendlyUserDBError(err error) error {
 		if strings.Contains(msg, "uni_users_email") || strings.Contains(msg, "email") {
 			return errors.New("This email address is already associated with another account. Please use a different email.")
 		}
+		if strings.Contains(msg, "uni_users_name") || strings.Contains(msg, "name") {
+			return errors.New("A user with this name already exists. Please choose a different name.")
+		}
 		return errors.New("A duplicate entry was detected. Please check your inputs and try again.")
 	}
 	return err
@@ -47,15 +50,18 @@ func (s *UserService) GetUserByID(id uint) (*domain.User, error) {
 func (s *UserService) CreateUser(req *domain.CreateUserRequest, actorID uint, actorName, ip string) (*domain.User, error) {
 	// Role-specific constraints & validations
 	switch req.RoleID {
-	case 2: // BRANCH_REQUESTER (Shared Requester account)
-		count, err := s.userRepo.CountByRoleID(2, 0)
+	case 2: // BRANCH_REQUESTER (Max 1 Requester per department)
+		if req.Department == "" {
+			return nil, errors.New("Department selection is required for Requester role.")
+		}
+		count, err := s.userRepo.CountByRoleAndDepartment(2, req.Department, 0)
 		if err != nil {
 			return nil, err
 		}
 		if count > 0 {
-			return nil, errors.New("A shared Requester account already exists in the system. Only 1 shared Requester account is allowed.")
+			return nil, errors.New(fmt.Sprintf("A Requester account already exists for the %s department. Only 1 Requester per department is allowed.", req.Department))
 		}
-		req.BranchID = nil // Shared requester account is global
+		req.BranchID = nil // Requester accounts are not branch-scoped
 	case 4: // AGENCY (Global delivery agency)
 		count, err := s.userRepo.CountByRoleID(4, 0)
 		if err != nil {
@@ -88,6 +94,14 @@ func (s *UserService) CreateUser(req *domain.CreateUserRequest, actorID uint, ac
 			return nil, errors.New(fmt.Sprintf("A Monitor account already exists for the %s department. Only 1 Monitor per department is allowed.", req.Department))
 		}
 		req.BranchID = nil
+	}
+
+	exists, err := s.userRepo.ExistsByName(req.Name, 0)
+	if err != nil {
+		return nil, err
+	}
+	if exists {
+		return nil, errors.New("A user with this name already exists. Please choose a different name.")
 	}
 
 	hashedPassword, err := hash.HashPassword(req.DefaultPassword)
@@ -146,9 +160,11 @@ func (s *UserService) UpdateUser(id uint, req *domain.UpdateUserRequest, actorID
 
 	switch targetRoleID {
 	case 2:
-		count, err := s.userRepo.CountByRoleID(2, id)
-		if err == nil && count > 0 {
-			return nil, errors.New("A shared Requester account already exists in the system.")
+		if targetDept != "" {
+			count, err := s.userRepo.CountByRoleAndDepartment(2, targetDept, id)
+			if err == nil && count > 0 {
+				return nil, errors.New(fmt.Sprintf("A Requester account already exists for the %s department.", targetDept))
+			}
 		}
 	case 4:
 		count, err := s.userRepo.CountByRoleID(4, id)
@@ -172,6 +188,13 @@ func (s *UserService) UpdateUser(id uint, req *domain.UpdateUserRequest, actorID
 	}
 
 	if req.Name != "" {
+		exists, err := s.userRepo.ExistsByName(req.Name, id)
+		if err != nil {
+			return nil, err
+		}
+		if exists {
+			return nil, errors.New("A user with this name already exists. Please choose a different name.")
+		}
 		user.Name = req.Name
 	}
 	if req.Email != "" {
@@ -194,6 +217,13 @@ func (s *UserService) UpdateUser(id uint, req *domain.UpdateUserRequest, actorID
 	}
 	if req.Status != "" {
 		user.Status = req.Status
+	}
+	if req.Password != "" {
+		newHash, err := hash.HashPassword(req.Password)
+		if err != nil {
+			return nil, err
+		}
+		user.Password = newHash
 	}
 
 	if err := s.userRepo.Update(user); err != nil {

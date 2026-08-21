@@ -1,8 +1,8 @@
 package domain
 
 type LoginRequest struct {
-	Mobile   string `json:"mobile" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Identifier string `json:"identifier" binding:"required"`
+	Password   string `json:"password" binding:"required"`
 }
 
 type LoginResponse struct {
@@ -36,6 +36,7 @@ type UpdateUserRequest struct {
 	Name               string `json:"name"`
 	Email              string `json:"email"`
 	Mobile             string `json:"mobile"`
+	Password           string `json:"password" binding:"omitempty,min=6"`
 	RoleID             uint   `json:"roleId"`
 	BranchID           *uint  `json:"branchId"`
 	Department         string `json:"department"`

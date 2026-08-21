@@ -19,10 +19,13 @@ func NewAuthService(userRepo *repository.UserRepository, auditRepo *repository.A
 	return &AuthService{userRepo: userRepo, auditRepo: auditRepo, cfg: cfg}
 }
 
-func (s *AuthService) Login(mobile, password, ip string) (*domain.LoginResponse, error) {
-	user, err := s.userRepo.FindByMobile(mobile)
+func (s *AuthService) Login(identifier, password, ip string) (*domain.LoginResponse, error) {
+	user, err := s.userRepo.FindByMobile(identifier)
 	if err != nil {
-		return nil, errors.New("invalid mobile number or password")
+		user, err = s.userRepo.FindByName(identifier)
+		if err != nil {
+			return nil, errors.New("invalid credentials")
+		}
 	}
 
 	if user.Status != "ACTIVE" {
@@ -30,7 +33,7 @@ func (s *AuthService) Login(mobile, password, ip string) (*domain.LoginResponse,
 	}
 
 	if !hash.CheckPasswordHash(password, user.Password) {
-		return nil, errors.New("invalid mobile number or password")
+		return nil, errors.New("invalid credentials")
 	}
 
 	token, err := jwt.GenerateToken(
