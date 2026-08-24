@@ -115,7 +115,7 @@ type DeliveryItemInput struct {
 
 type ProcessDeliveryDTO struct {
 	DeliveryNotes string              `json:"deliveryNotes"`
-	BillUrl       string              `json:"billUrl"`
+	BillUrl       string              `json:"billUrl" binding:"required"`
 	BillNotes     string              `json:"billNotes"`
 	Items         []DeliveryItemInput `json:"items" binding:"required,gt=0"`
 }

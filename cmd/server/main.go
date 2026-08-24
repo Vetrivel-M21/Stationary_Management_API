@@ -131,8 +131,7 @@ func main() {
 				admin.POST("/branches", branchHandler.CreateBranch)
 				admin.PUT("/branches/:id", branchHandler.UpdateBranch)
 
-				// Product Management (Admin write)
-				admin.POST("/products", productHandler.CreateProduct)
+				// Product Management (Admin-only update/delete)
 				admin.PUT("/products/:id", productHandler.UpdateProduct)
 				admin.DELETE("/products/:id", productHandler.DeleteProduct)
 
@@ -147,6 +146,9 @@ func main() {
 			protected.GET("/branches", branchHandler.GetAllBranches)
 			protected.GET("/products", productHandler.GetAllProducts)
 			protected.GET("/sla-settings", slaHandler.GetSlaSettings)
+
+			// Product Management (Admin + Agency create; update/delete are Admin-only)
+			protected.POST("/products", middleware.RequireRoles("ADMIN", "AGENCY"), productHandler.CreateProduct)
 
 			// Request Workflow Routes
 			// Branch Requester: Create Request

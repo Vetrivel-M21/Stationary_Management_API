@@ -85,7 +85,11 @@ func (s *RequestService) GetRequests(user *domain.User, status string, page, lim
 	var department string
 
 	if user.Role.Name == "BRANCH_REQUESTER" {
-		requesterID = &user.ID
+		if user.Department != "" {
+			department = user.Department
+		} else {
+			requesterID = &user.ID
+		}
 	} else if user.Role.Name == "APPROVER" {
 		if user.ApproverAccessType == "SINGLE_BRANCH" && user.BranchID != nil {
 			branchID = user.BranchID
@@ -276,8 +280,8 @@ func (s *RequestService) ProcessVerification(requestID uint, verifier *domain.Us
 		return nil, errors.New("request not found")
 	}
 
-	if verifier.Role.Name == "BRANCH_REQUESTER" && req.RequesterID != verifierID {
-		return nil, errors.New("You can only verify requests you submitted.")
+	if verifier.Role.Name == "BRANCH_REQUESTER" && req.Department != verifier.Department {
+		return nil, errors.New("This request does not belong to your department.")
 	}
 
 	var verifications []domain.VerificationItem

@@ -16,7 +16,7 @@ INSERT INTO branches (id, name, code, address, status) VALUES
 -- Default Password for all initial users: Admin@123
 -- Hash below generated with Bcrypt cost 10: $2a$10$hK.fN.w1n65mC90D14g2x.l0p5z.2G8W8T9eK.g7Y0f56z8rW
 INSERT INTO users (id, name, email, mobile, password, role_id, branch_id, approver_access_type, status, first_login) VALUES
-(1, 'System Administrator', 'admin@stationery.com', '09999999999', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 1, 1, 'ALL_BRANCHES', 'ACTIVE', FALSE),
+(1, 'Admin', 'admin@stationery.com', '09999999999', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 1, 1, 'ALL_BRANCHES', 'ACTIVE', FALSE),
 (2, 'John Requester', 'requester@stationery.com', '09888888888', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 2, 2, 'ALL_BRANCHES', 'ACTIVE', TRUE),
 (3, 'Sarah Approver', 'approver@stationery.com', '09777777777', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 3, 2, 'SINGLE_BRANCH', 'ACTIVE', TRUE),
 (4, 'Express Delivery Agency', 'agency@stationery.com', '09666666666', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 4, NULL, 'ALL_BRANCHES', 'ACTIVE', TRUE),
