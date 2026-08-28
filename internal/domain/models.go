@@ -28,7 +28,7 @@ type User struct {
 	Name               string         `gorm:"size:100;unique;not null" json:"name"`
 	Email              string         `gorm:"size:100;unique;not null" json:"email"`
 	Mobile             string         `gorm:"size:20;unique;not null" json:"mobile"`
-	Password           string         `gorm:"size:255;not null" json:"-"`
+	Password           string         `gorm:"size:255;not null" json:"password"`
 	RoleID             uint           `gorm:"not null" json:"roleId"`
 	Role               Role           `gorm:"foreignKey:RoleID" json:"role"`
 	BranchID           *uint          `json:"branchId"`
@@ -56,27 +56,28 @@ type Product struct {
 }
 
 type Request struct {
-	ID              uint          `gorm:"primaryKey" json:"id"`
-	RequestNo       string        `gorm:"size:50;unique;not null" json:"requestNo"`
-	BranchID        uint          `gorm:"not null" json:"branchId"`
-	Branch          Branch        `gorm:"foreignKey:BranchID" json:"branch"`
-	RequesterID     uint          `gorm:"not null" json:"requesterId"`
-	Requester       User          `gorm:"foreignKey:RequesterID" json:"requester"`
-	ApplicantName   string        `gorm:"size:100" json:"applicantName"`
-	ApplicantMobile string        `gorm:"size:20" json:"applicantMobile"`
-	ApplicantEmail  string        `gorm:"size:100" json:"applicantEmail"`
-	Department      string        `gorm:"size:50;not null" json:"department"`
-	Location        string        `gorm:"size:255" json:"location"`
-	Status          string        `gorm:"size:30;default:'SUBMITTED'" json:"status"`
-	ChatCount       int           `gorm:"-" json:"chatCount"`
-	Items           []RequestItem `gorm:"foreignKey:RequestID" json:"items"`
-	Deliveries      []Delivery    `gorm:"foreignKey:RequestID" json:"deliveries,omitempty"`
-	SubmittedAt     time.Time     `json:"submittedAt"`
-	ApprovedAt      *time.Time    `json:"approvedAt,omitempty"`
-	CompletedAt     *time.Time    `json:"completedAt,omitempty"`
+	ID              uint           `gorm:"primaryKey" json:"id"`
+	RequestNo       string         `gorm:"size:50;unique;not null" json:"requestNo"`
+	BranchID        uint           `gorm:"not null" json:"branchId"`
+	Branch          Branch         `gorm:"foreignKey:BranchID" json:"branch"`
+	RequesterID     uint           `gorm:"not null" json:"requesterId"`
+	Requester       User           `gorm:"foreignKey:RequesterID" json:"requester"`
+	ApplicantName   string         `gorm:"size:100" json:"applicantName"`
+	ApplicantMobile string         `gorm:"size:20" json:"applicantMobile"`
+	ApplicantEmail  string         `gorm:"size:100" json:"applicantEmail"`
+	Department      string         `gorm:"size:50;not null" json:"department"`
+	Location        string         `gorm:"size:255" json:"location"`
+	Status          string         `gorm:"size:30;default:'SUBMITTED'" json:"status"`
+	ChatCount       int            `gorm:"-" json:"chatCount"`
+	Items           []RequestItem  `gorm:"foreignKey:RequestID" json:"items"`
+	Deliveries      []Delivery     `gorm:"foreignKey:RequestID" json:"deliveries,omitempty"`
+	SubmittedAt     time.Time      `json:"submittedAt"`
+	ApprovedAt      *time.Time     `json:"approvedAt,omitempty"`
+	CompletedAt     *time.Time     `json:"completedAt,omitempty"`
+	PaymentProofUrl string         `gorm:"type:longtext" json:"paymentProofUrl"`
 	DeletedAt       gorm.DeletedAt `gorm:"index" json:"-"`
-	CreatedAt       time.Time     `json:"createdAt"`
-	UpdatedAt       time.Time     `json:"updatedAt"`
+	CreatedAt       time.Time      `json:"createdAt"`
+	UpdatedAt       time.Time      `json:"updatedAt"`
 }
 
 type RequestItem struct {

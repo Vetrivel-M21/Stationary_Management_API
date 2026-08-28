@@ -113,6 +113,9 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	if !db.Migrator().HasColumn(&domain.Delivery{}, "bill_notes") {
 		_ = db.Migrator().AddColumn(&domain.Delivery{}, "bill_notes")
 	}
+	if !db.Migrator().HasColumn(&domain.Request{}, "payment_proof_url") {
+		_ = db.Migrator().AddColumn(&domain.Request{}, "payment_proof_url")
+	}
 	if !db.Migrator().HasColumn(&domain.User{}, "deleted_at") {
 		_ = db.Migrator().AddColumn(&domain.User{}, "deleted_at")
 	}

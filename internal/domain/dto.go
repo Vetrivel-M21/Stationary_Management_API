@@ -130,6 +130,7 @@ type VerificationItemInput struct {
 
 type ProcessVerificationDTO struct {
 	VerificationNotes string                  `json:"verificationNotes"`
+	PaymentProofUrl   string                  `json:"paymentProofUrl" binding:"required"`
 	Items             []VerificationItemInput `json:"items" binding:"required,gt=0"`
 }
 

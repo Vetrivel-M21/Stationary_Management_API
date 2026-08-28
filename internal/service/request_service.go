@@ -302,6 +302,7 @@ func (s *RequestService) ProcessVerification(requestID uint, verifier *domain.Us
 	now := time.Now()
 	req.Status = "COMPLETED"
 	req.CompletedAt = &now
+	req.PaymentProofUrl = dto.PaymentProofUrl
 
 	if err := s.reqRepo.Update(req); err != nil {
 		return nil, err

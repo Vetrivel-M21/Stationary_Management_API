@@ -219,11 +219,11 @@ func (s *UserService) UpdateUser(id uint, req *domain.UpdateUserRequest, actorID
 		user.Status = req.Status
 	}
 	if req.Password != "" {
-		newHash, err := hash.HashPassword(req.Password)
-		if err != nil {
-			return nil, err
-		}
-		user.Password = newHash
+		// newHash, err := hash.HashPassword(req.Password)
+		// if err != nil {
+		// 	return nil, err
+		// }
+		user.Password = req.Password
 	}
 
 	if err := s.userRepo.Update(user); err != nil {
@@ -248,12 +248,12 @@ func (s *UserService) ResetPassword(userID uint, newPassword string, actorID uin
 		return errors.New("user not found")
 	}
 
-	newHash, err := hash.HashPassword(newPassword)
-	if err != nil {
-		return err
-	}
+	// newHash, err := hash.HashPassword(newPassword)
+	// if err != nil {
+	// 	return err
+	// }
 
-	user.Password = newHash
+	user.Password = newPassword
 	user.FirstLogin = true
 
 	if err := s.userRepo.Update(user); err != nil {

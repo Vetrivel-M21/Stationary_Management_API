@@ -1,0 +1,17 @@
+PORT=8081
+ENV=production
+DB_HOST=118.139.179.168
+DB_PORT=3306
+DB_USER=misuser
+DB_PASSWORD=8xUNJp.oQGs9pap5
+DB_NAME=stationery_db
+
+JWT_SECRET=super-secret-jwt-key-stationery-management-2026
+JWT_EXPIRATION_HOURS=24
+JWT_REFRESH_EXPIRATION_HOURS=168
+
+# SMTP_HOST=smtp.gmail.com
+# SMTP_PORT=587
+# SMTP_USER=notifications@stationeryapp.com
+# SMTP_PASSWORD=app-password
+# SMTP_FROM=Stationery Management System <notifications@stationeryapp.com>
