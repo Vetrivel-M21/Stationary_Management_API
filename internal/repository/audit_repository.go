@@ -21,11 +21,23 @@ func (r *AuditRepository) Create(log *domain.AuditLog) error {
 	return r.db.Create(log).Error
 }
 
-func (r *AuditRepository) FindAll(page, limit int) ([]domain.AuditLog, int64, error) {
+func (r *AuditRepository) FindAll(page, limit int, entityType, action, startDate, endDate string) ([]domain.AuditLog, int64, error) {
 	var logs []domain.AuditLog
 	var total int64
 
 	query := r.db.Model(&domain.AuditLog{})
+	if entityType != "" {
+		query = query.Where("entity_type = ?", entityType)
+	}
+	if action != "" {
+		query = query.Where("action = ?", action)
+	}
+	if startDate != "" {
+		query = query.Where("DATE(created_at) >= ?", startDate)
+	}
+	if endDate != "" {
+		query = query.Where("DATE(created_at) <= ?", endDate)
+	}
 	query.Count(&total)
 
 	offset := (page - 1) * limit

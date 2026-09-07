@@ -23,7 +23,7 @@ func (r *BranchRepository) FindByID(id uint) (*domain.Branch, error) {
 	return &branch, nil
 }
 
-func (r *BranchRepository) FindAll(search string, page, limit int) ([]domain.Branch, int64, error) {
+func (r *BranchRepository) FindAll(search, department string, page, limit int) ([]domain.Branch, int64, error) {
 	var branches []domain.Branch
 	var total int64
 
@@ -31,6 +31,13 @@ func (r *BranchRepository) FindAll(search string, page, limit int) ([]domain.Bra
 	if search != "" {
 		s := "%" + search + "%"
 		query = query.Where("name LIKE ? OR code LIKE ?", s, s)
+	}
+	if department != "" {
+		if department == "UNASSIGNED" {
+			query = query.Where("department = '' OR department IS NULL")
+		} else {
+			query = query.Where("department = ?", department)
+		}
 	}
 
 	query.Count(&total)

@@ -21,13 +21,3 @@ INSERT INTO users (id, name, email, mobile, password, role_id, branch_id, approv
 (3, 'Sarah Approver', 'approver@stationery.com', '09777777777', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 3, 2, 'SINGLE_BRANCH', 'ACTIVE', TRUE),
 (4, 'Express Delivery Agency', 'agency@stationery.com', '09666666666', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 4, NULL, 'ALL_BRANCHES', 'ACTIVE', TRUE),
 (5, 'Michael Monitor', 'monitor@stationery.com', '09555555555', '$2a$10$04tNmsqR9Xw3fJ9J8eR4E.hC0lK8h21/WkZ56bH2.R3P4N5M6Q7R8', 5, NULL, 'ALL_BRANCHES', 'ACTIVE', TRUE);
-
-INSERT INTO products (id, name, category, unit, description, status) VALUES 
-(1, 'Ballpoint Pen - Blue (Box of 10)', 'Writing Instruments', 'Box', 'High-quality blue ink ballpoint pens 0.7mm', 'ACTIVE'),
-(2, 'A4 Printing Paper (80gsm - 500 Sheets)', 'Paper Products', 'Ream', 'Premium white multipurpose copy paper', 'ACTIVE'),
-(3, 'Permanent Marker - Black', 'Writing Instruments', 'Piece', 'Chisel tip waterproof black permanent marker', 'ACTIVE'),
-(4, 'Heavy Duty Stapler No. 10', 'Desk Supplies', 'Piece', 'Durable metal body desk stapler', 'ACTIVE'),
-(5, 'Sticky Notes 3x3 Yellow (100 Sheets)', 'Paper Products', 'Pad', 'Standard self-adhesive memo pads', 'ACTIVE'),
-(6, 'Expandable File Folder A4', 'Filing & Storage', 'Piece', 'Heavy-duty poly expandable document organizer', 'ACTIVE'),
-(7, '12-Digit Desk Calculator', 'Electronics', 'Piece', 'Dual-power solar and battery desktop calculator', 'ACTIVE'),
-(8, 'Paper Clips (100 pcs/box)', 'Desk Supplies', 'Box', 'Vinyl coated rust-resistant paper clips', 'ACTIVE');

@@ -35,13 +35,15 @@ Standard Gin + GORM layered service backend, wired together entirely in `cmd/ser
 Routes are grouped under `/api/v1` in `main.go`: an unauthenticated `auth/login`, then a `protected` group behind `JWTAuth`, with an `admin` subgroup behind `RequireRoles("ADMIN")`. Non-admin write routes use per-route `RequireRoles(...)` (e.g. `BRANCH_REQUESTER`, `APPROVER`, `AGENCY`, `MONITOR`).
 
 The domain models a stationery request/fulfillment workflow through a fixed role sequence:
-`Request` (branch requester creates, with `RequestItem`s) → `approve` (`APPROVER` creates `ApprovalItem`s) → `deliver` (`AGENCY` creates `Delivery`/`DeliveryItem`s) → `verify` (`BRANCH_REQUESTER` creates `VerificationItem`s). `SlaSettings` defines max days allowed per stage; `MonitorService`/`monitor` routes surface delayed orders. Each request also has a chat thread (`ChatMessage`, targeted by role) and every mutating action should be recorded via `AuditRepository`/`AuditLog`.
+`Request` (branch requester creates, with `RequestItem`s) → `approve` (`APPROVER` creates `ApprovalItem`s) → `deliver` (`AGENCY` creates `Delivery`/`DeliveryItem`s) → `verify` (`BRANCH_REQUESTER` creates `VerificationItem`s). `SlaSettings` defines max days allowed per stage; `MonitorService`/`monitor` routes surface delayed orders. Each request also has a chat thread (`ChatMessage`, targeted by role) and every mutating action should be recorded via `AuditRepository`/`AuditLog`. `Request.PaymentProofUrl` stores an uploaded payment proof (set via `RequestService`/DTO, backfilled as a manual column in `InitDB`).
 
 Roles are seeded fixed-ID rows (`ADMIN`=1, `BRANCH_REQUESTER`=2, `APPROVER`=3, `AGENCY`=4, `MONITOR`=5) — see `RequireRoles` calls in `main.go` for which roles can hit which routes, and `repository/db.go`'s `SeedInitialData` for the seed data (including the default admin login `admin@stationery.com` / `Admin@123`).
 
 ### Database bootstrapping
 
 `InitDB` in `internal/repository/db.go` does more than open a connection: it creates the database if missing, drops a couple of legacy FK constraints if present, runs `AutoMigrate` over all domain models, then does manual `HasColumn`/`AddColumn` checks for columns added after the initial migration, and finally calls `SeedInitialData`. There's also a standalone `migrations/000001_init_schema.up/down.sql` pair and `seed/seed.sql` — the Go-side `InitDB` path is what actually runs on `make run`/server start, the SQL files are a secondary reference/migration-tool path.
+
+If `InitDB` fails, `main.go` logs a warning and starts the server anyway with a nil `*gorm.DB` — the process does not exit, so a missing/unreachable database surfaces as request-time errors rather than a startup failure.
 
 ### API docs
 

@@ -45,16 +45,17 @@ type UpdateUserRequest struct {
 }
 
 type CreateBranchRequest struct {
-	Name    string `json:"name" binding:"required"`
-	Code    string `json:"code" binding:"required"`
-	Address string `json:"address"`
+	Name       string `json:"name" binding:"required"`
+	Address    string `json:"address"`
+	Department string `json:"department"`
 }
 
 type UpdateBranchRequest struct {
-	Name    string `json:"name"`
-	Code    string `json:"code"`
-	Address string `json:"address"`
-	Status  string `json:"status"`
+	Name       string `json:"name"`
+	Code       string `json:"code"`
+	Address    string `json:"address"`
+	Department string `json:"department"`
+	Status     string `json:"status"`
 }
 
 type CreateProductRequest struct {
@@ -80,6 +81,11 @@ type CreateRequestItemInput struct {
 	UnitPrice    float64 `json:"unitPrice"`
 }
 
+type CreateShopItemInput struct {
+	ItemName     string `json:"itemName" binding:"required"`
+	RequestedQty int    `json:"requestedQty" binding:"required,gt=0"`
+}
+
 type CreateRequestDTO struct {
 	BranchID        uint                     `json:"branchId"`
 	BranchName      string                   `json:"branchName"`
@@ -88,7 +94,8 @@ type CreateRequestDTO struct {
 	ApplicantEmail  string                   `json:"applicantEmail" binding:"required"`
 	Department      string                   `json:"department" binding:"required"`
 	Location        string                   `json:"location"`
-	Items           []CreateRequestItemInput `json:"items" binding:"required,gt=0"`
+	Items           []CreateRequestItemInput `json:"items"`
+	ShopItems       []CreateShopItemInput    `json:"shopItems"`
 }
 
 type ApprovalItemInput struct {
@@ -134,6 +141,12 @@ type ProcessVerificationDTO struct {
 	Items             []VerificationItemInput `json:"items" binding:"required,gt=0"`
 }
 
+type ProcessShopVerificationDTO struct {
+	VerificationNotes string   `json:"verificationNotes"`
+	BillUrls          []string `json:"billUrls" binding:"required,gt=0,dive,required"`
+	PaymentProofUrls  []string `json:"paymentProofUrls" binding:"required,gt=0,dive,required"`
+}
+
 type SendReminderDTO struct {
 	RequestID uint   `json:"requestId" binding:"required"`
 	Target    string `json:"target" binding:"required"` // REQUESTER, APPROVER, AGENCY
@@ -151,11 +164,19 @@ type UpdateSlaSettingsDTO struct {
 }
 
 type DelayedOrderDTO struct {
-	Request       Request `json:"request"`
-	DelayDays     int     `json:"delayDays"`
-	DelayedStage  string  `json:"delayedStage"`
-	TargetRole    string  `json:"targetRole"`
-	MaxAllowedDays int    `json:"maxAllowedDays"`
+	Request        Request `json:"request"`
+	DelayDays      int     `json:"delayDays"`
+	DelayedStage   string  `json:"delayedStage"`
+	TargetRole     string  `json:"targetRole"`
+	MaxAllowedDays int     `json:"maxAllowedDays"`
+}
+
+type ProductTotalDTO struct {
+	ProductID     uint   `json:"productId"`
+	ProductName   string `json:"productName"`
+	Category      string `json:"category"`
+	Unit          string `json:"unit"`
+	TotalQuantity int64  `json:"totalQuantity"`
 }
 
 type DashboardMetrics struct {

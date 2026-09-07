@@ -53,9 +53,70 @@ paths:
       responses:
         '200':
           description: List of Products
+  /branches:
+    get:
+      summary: List Branches
+      description: Read-only for all authenticated roles. Supports filtering by department; pass department=UNASSIGNED to find branches with no department set yet.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: department
+          in: query
+          schema:
+            type: string
+          description: Exact department match, or the literal value UNASSIGNED to list branches with no department set
+        - name: page
+          in: query
+          schema:
+            type: integer
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of Branches
+    post:
+      summary: Create Branch (Admin)
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BranchInput'
+      responses:
+        '201':
+          description: Branch Created
+  /branches/{id}:
+    put:
+      summary: Update Branch (Admin)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BranchInput'
+      responses:
+        '200':
+          description: Branch Updated
   /requests:
     post:
       summary: Submit Stationery Request
+      description: A request accepts catalog items (items, requiring a productId) and/or shop items (shopItems, a free-text itemName with no catalog entry) in the same submission. Shop items skip Agency/Delivery entirely and go straight from Approver back to the requester.
       security:
         - BearerAuth: []
       requestBody:
@@ -64,7 +125,7 @@ paths:
           application/json:
             schema:
               type: object
-              required: [branchId, items]
+              required: [branchId]
               properties:
                 branchId:
                   type: integer
@@ -77,10 +138,85 @@ paths:
                         type: integer
                       requestedQty:
                         type: integer
+                shopItems:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      itemName:
+                        type: string
+                      requestedQty:
+                        type: integer
       responses:
         '201':
           description: Request Submitted
+  /requests/{id}/shop-items/verify:
+    post:
+      summary: Declare Shop Item Purchase (Bill + Payment Proof)
+      description: Requester submits, once per request, the bill(s) and payment proof(s) for all approved shop items on that request. Not applicable to catalog items, which are verified via /requests/{id}/verify.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [billUrls, paymentProofUrls]
+              properties:
+                verificationNotes:
+                  type: string
+                billUrls:
+                  type: array
+                  items:
+                    type: string
+                    description: Base64 data-URI of a bill/receipt image or PDF
+                paymentProofUrls:
+                  type: array
+                  items:
+                    type: string
+                    description: Base64 data-URI of a payment proof image or PDF
+      responses:
+        '200':
+          description: Shop Item Purchase Verified
+  /dashboard/product-totals:
+    get:
+      summary: Overall Orders (Agency) - Product Totals
+      description: Aggregates total requested quantity per catalog product across all requests, for Agency bulk-purchase planning. Excludes shop items.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Optional request status filter
+      responses:
+        '200':
+          description: Product Totals
 components:
+  schemas:
+    BranchInput:
+      type: object
+      properties:
+        name:
+          type: string
+        code:
+          type: string
+        address:
+          type: string
+        department:
+          type: string
+          description: One of GOLD LOAN, CHIT FUND, OTHERS, NIDHI, or blank/unassigned
+        status:
+          type: string
   securitySchemes:
     BearerAuth:
       type: http

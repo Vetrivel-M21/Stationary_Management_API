@@ -1,10 +1,44 @@
 package domain
 
 import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
 	"time"
 
 	"gorm.io/gorm"
 )
+
+type JSONStringArray []string
+
+func (a JSONStringArray) Value() (driver.Value, error) {
+	if a == nil {
+		return "[]", nil
+	}
+	b, err := json.Marshal(a)
+	return string(b), err
+}
+
+func (a *JSONStringArray) Scan(value interface{}) error {
+	if value == nil {
+		*a = JSONStringArray{}
+		return nil
+	}
+	var b []byte
+	switch v := value.(type) {
+	case []byte:
+		b = v
+	case string:
+		b = []byte(v)
+	default:
+		return fmt.Errorf("unsupported Scan type for JSONStringArray: %T", value)
+	}
+	if len(b) == 0 {
+		*a = JSONStringArray{}
+		return nil
+	}
+	return json.Unmarshal(b, a)
+}
 
 type Role struct {
 	ID          uint   `gorm:"primaryKey" json:"id"`
@@ -13,14 +47,15 @@ type Role struct {
 }
 
 type Branch struct {
-	ID        uint           `gorm:"primaryKey" json:"id"`
-	Name      string         `gorm:"size:100;not null" json:"name"`
-	Code      string         `gorm:"size:20;unique;not null" json:"code"`
-	Address   string         `gorm:"type:text" json:"address"`
-	Status    string         `gorm:"size:20;default:'ACTIVE'" json:"status"`
-	DeletedAt gorm.DeletedAt `gorm:"index" json:"-"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
+	ID         uint           `gorm:"primaryKey" json:"id"`
+	Name       string         `gorm:"size:100;not null" json:"name"`
+	Code       string         `gorm:"size:20;unique;not null" json:"code"`
+	Address    string         `gorm:"type:text" json:"address"`
+	Department string         `gorm:"size:50" json:"department"`
+	Status     string         `gorm:"size:20;default:'ACTIVE'" json:"status"`
+	DeletedAt  gorm.DeletedAt `gorm:"index" json:"-"`
+	CreatedAt  time.Time      `json:"createdAt"`
+	UpdatedAt  time.Time      `json:"updatedAt"`
 }
 
 type User struct {
@@ -56,38 +91,46 @@ type Product struct {
 }
 
 type Request struct {
-	ID              uint           `gorm:"primaryKey" json:"id"`
-	RequestNo       string         `gorm:"size:50;unique;not null" json:"requestNo"`
-	BranchID        uint           `gorm:"not null" json:"branchId"`
-	Branch          Branch         `gorm:"foreignKey:BranchID" json:"branch"`
-	RequesterID     uint           `gorm:"not null" json:"requesterId"`
-	Requester       User           `gorm:"foreignKey:RequesterID" json:"requester"`
-	ApplicantName   string         `gorm:"size:100" json:"applicantName"`
-	ApplicantMobile string         `gorm:"size:20" json:"applicantMobile"`
-	ApplicantEmail  string         `gorm:"size:100" json:"applicantEmail"`
-	Department      string         `gorm:"size:50;not null" json:"department"`
-	Location        string         `gorm:"size:255" json:"location"`
-	Status          string         `gorm:"size:30;default:'SUBMITTED'" json:"status"`
-	ChatCount       int            `gorm:"-" json:"chatCount"`
-	Items           []RequestItem  `gorm:"foreignKey:RequestID" json:"items"`
-	Deliveries      []Delivery     `gorm:"foreignKey:RequestID" json:"deliveries,omitempty"`
-	SubmittedAt     time.Time      `json:"submittedAt"`
-	ApprovedAt      *time.Time     `json:"approvedAt,omitempty"`
-	CompletedAt     *time.Time     `json:"completedAt,omitempty"`
-	PaymentProofUrl string         `gorm:"type:longtext" json:"paymentProofUrl"`
-	DeletedAt       gorm.DeletedAt `gorm:"index" json:"-"`
-	CreatedAt       time.Time      `json:"createdAt"`
-	UpdatedAt       time.Time      `json:"updatedAt"`
+	ID                   uint            `gorm:"primaryKey" json:"id"`
+	RequestNo            string          `gorm:"size:50;unique;not null" json:"requestNo"`
+	BranchID             uint            `gorm:"not null" json:"branchId"`
+	Branch               Branch          `gorm:"foreignKey:BranchID" json:"branch"`
+	RequesterID          uint            `gorm:"not null" json:"requesterId"`
+	Requester            User            `gorm:"foreignKey:RequesterID" json:"requester"`
+	ApplicantName        string          `gorm:"size:100" json:"applicantName"`
+	ApplicantMobile      string          `gorm:"size:20" json:"applicantMobile"`
+	ApplicantEmail       string          `gorm:"size:100" json:"applicantEmail"`
+	Department           string          `gorm:"size:50;not null" json:"department"`
+	Location             string          `gorm:"size:255" json:"location"`
+	Status               string          `gorm:"size:30;default:'SUBMITTED'" json:"status"`
+	ChatCount            int             `gorm:"-" json:"chatCount"`
+	Items                []RequestItem   `gorm:"foreignKey:RequestID" json:"items"`
+	Deliveries           []Delivery      `gorm:"foreignKey:RequestID" json:"deliveries,omitempty"`
+	SubmittedAt          time.Time       `json:"submittedAt"`
+	ApprovedAt           *time.Time      `json:"approvedAt,omitempty"`
+	CompletedAt          *time.Time      `json:"completedAt,omitempty"`
+	PaymentProofUrl      string          `gorm:"type:longtext" json:"paymentProofUrl"`
+	ShopItemsVerifiedAt  *time.Time      `json:"shopItemsVerifiedAt,omitempty"`
+	ShopBillUrls         JSONStringArray `gorm:"type:longtext" json:"shopBillUrls"`
+	ShopPaymentProofUrls JSONStringArray `gorm:"type:longtext" json:"shopPaymentProofUrls"`
+	DeletedAt            gorm.DeletedAt  `gorm:"index" json:"-"`
+	CreatedAt            time.Time       `json:"createdAt"`
+	UpdatedAt            time.Time       `json:"updatedAt"`
 }
 
 type RequestItem struct {
-	ID           uint          `gorm:"primaryKey" json:"id"`
-	RequestID    uint          `gorm:"not null" json:"requestId"`
-	ProductID    uint          `gorm:"not null" json:"productId"`
-	Product      Product       `gorm:"foreignKey:ProductID" json:"product"`
-	RequestedQty int           `gorm:"not null;default:1" json:"requestedQty"`
-	UnitPrice    float64       `gorm:"type:decimal(10,2);default:0" json:"unitPrice"`
-	ApprovalItem *ApprovalItem `gorm:"foreignKey:RequestItemID" json:"approvalItem,omitempty"`
+	ID              uint          `gorm:"primaryKey" json:"id"`
+	RequestID       uint          `gorm:"not null" json:"requestId"`
+	ItemKind        string        `gorm:"size:20;not null;default:'CATALOG'" json:"itemKind"`
+	ProductID       *uint         `json:"productId"`
+	Product         Product       `gorm:"foreignKey:ProductID" json:"product"`
+	ProductName     string        `gorm:"size:150" json:"productName"`
+	ProductCategory string        `gorm:"size:50" json:"productCategory"`
+	ProductUnit     string        `gorm:"size:30" json:"productUnit"`
+	ItemName        string        `gorm:"size:150" json:"itemName"`
+	RequestedQty    int           `gorm:"not null;default:1" json:"requestedQty"`
+	UnitPrice       float64       `gorm:"type:decimal(10,2);default:0" json:"unitPrice"`
+	ApprovalItem    *ApprovalItem `gorm:"foreignKey:RequestItemID" json:"approvalItem,omitempty"`
 }
 
 type ApprovalItem struct {
@@ -117,6 +160,9 @@ type DeliveryItem struct {
 	DeliveryID       uint              `gorm:"not null" json:"deliveryId"`
 	ProductID        uint              `gorm:"not null" json:"productId"`
 	Product          Product           `gorm:"foreignKey:ProductID" json:"product"`
+	ProductName      string            `gorm:"size:150" json:"productName"`
+	ProductCategory  string            `gorm:"size:50" json:"productCategory"`
+	ProductUnit      string            `gorm:"size:30" json:"productUnit"`
 	ApprovedQty      int               `gorm:"not null;default:0" json:"approvedQty"`
 	DeliveredQty     int               `gorm:"not null;default:0" json:"deliveredQty"`
 	UnavailableQty   int               `gorm:"not null;default:0" json:"unavailableQty"`

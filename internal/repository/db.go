@@ -16,7 +16,7 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	// First connect without DB name to ensure database exists
 	baseDSN := fmt.Sprintf("%s:%s@tcp(%s:%s)/?charset=utf8mb4&parseTime=True&loc=Local&timeout=3s",
 		cfg.DBUser, cfg.DBPassword, cfg.DBHost, cfg.DBPort)
-	
+
 	baseDB, err := gorm.Open(mysql.Open(baseDSN), &gorm.Config{})
 	if err == nil {
 		createDBSQL := fmt.Sprintf("CREATE DATABASE IF NOT EXISTS `%s` CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;", cfg.DBName)
@@ -47,11 +47,17 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	if count2 > 0 {
 		_ = db.Exec("ALTER TABLE `users` DROP FOREIGN KEY `users_ibfk_2`").Error
 	}
+	var count3 int64
+	db.Raw("SELECT COUNT(*) FROM information_schema.table_constraints WHERE table_schema = DATABASE() AND table_name = 'request_items' AND constraint_name = 'request_items_ibfk_2'").Scan(&count3)
+	if count3 > 0 {
+		_ = db.Exec("ALTER TABLE `request_items` DROP FOREIGN KEY `request_items_ibfk_2`").Error
+	}
 
 	_ = db.Exec("ALTER TABLE `roles` MODIFY `id` BIGINT UNSIGNED AUTO_INCREMENT").Error
 	_ = db.Exec("ALTER TABLE `branches` MODIFY `id` BIGINT UNSIGNED AUTO_INCREMENT").Error
 	_ = db.Exec("ALTER TABLE `users` MODIFY `role_id` BIGINT UNSIGNED NOT NULL").Error
 	_ = db.Exec("ALTER TABLE `users` MODIFY `branch_id` BIGINT UNSIGNED").Error
+	_ = db.Exec("ALTER TABLE `request_items` MODIFY `product_id` BIGINT UNSIGNED NULL").Error
 
 	// Auto-migrate tables
 	err = db.AutoMigrate(
@@ -116,11 +122,46 @@ func InitDB(cfg *config.Config) (*gorm.DB, error) {
 	if !db.Migrator().HasColumn(&domain.Request{}, "payment_proof_url") {
 		_ = db.Migrator().AddColumn(&domain.Request{}, "payment_proof_url")
 	}
+	if !db.Migrator().HasColumn(&domain.RequestItem{}, "item_kind") {
+		_ = db.Migrator().AddColumn(&domain.RequestItem{}, "item_kind")
+		_ = db.Exec("UPDATE `request_items` SET `item_kind` = 'CATALOG' WHERE `item_kind` = '' OR `item_kind` IS NULL").Error
+	}
+	if !db.Migrator().HasColumn(&domain.RequestItem{}, "item_name") {
+		_ = db.Migrator().AddColumn(&domain.RequestItem{}, "item_name")
+	}
+	if !db.Migrator().HasColumn(&domain.RequestItem{}, "product_name") {
+		_ = db.Migrator().AddColumn(&domain.RequestItem{}, "product_name")
+		_ = db.Migrator().AddColumn(&domain.RequestItem{}, "product_category")
+		_ = db.Migrator().AddColumn(&domain.RequestItem{}, "product_unit")
+		_ = db.Exec(`UPDATE request_items ri JOIN products p ON p.id = ri.product_id
+			SET ri.product_name = p.name, ri.product_category = p.category, ri.product_unit = p.unit
+			WHERE ri.product_name = '' OR ri.product_name IS NULL`).Error
+	}
+	if !db.Migrator().HasColumn(&domain.DeliveryItem{}, "product_name") {
+		_ = db.Migrator().AddColumn(&domain.DeliveryItem{}, "product_name")
+		_ = db.Migrator().AddColumn(&domain.DeliveryItem{}, "product_category")
+		_ = db.Migrator().AddColumn(&domain.DeliveryItem{}, "product_unit")
+		_ = db.Exec(`UPDATE delivery_items di JOIN products p ON p.id = di.product_id
+			SET di.product_name = p.name, di.product_category = p.category, di.product_unit = p.unit
+			WHERE di.product_name = '' OR di.product_name IS NULL`).Error
+	}
+	if !db.Migrator().HasColumn(&domain.Request{}, "shop_items_verified_at") {
+		_ = db.Migrator().AddColumn(&domain.Request{}, "shop_items_verified_at")
+	}
+	if !db.Migrator().HasColumn(&domain.Request{}, "shop_bill_urls") {
+		_ = db.Migrator().AddColumn(&domain.Request{}, "shop_bill_urls")
+	}
+	if !db.Migrator().HasColumn(&domain.Request{}, "shop_payment_proof_urls") {
+		_ = db.Migrator().AddColumn(&domain.Request{}, "shop_payment_proof_urls")
+	}
 	if !db.Migrator().HasColumn(&domain.User{}, "deleted_at") {
 		_ = db.Migrator().AddColumn(&domain.User{}, "deleted_at")
 	}
 	if !db.Migrator().HasColumn(&domain.Branch{}, "deleted_at") {
 		_ = db.Migrator().AddColumn(&domain.Branch{}, "deleted_at")
+	}
+	if !db.Migrator().HasColumn(&domain.Branch{}, "department") {
+		_ = db.Migrator().AddColumn(&domain.Branch{}, "department")
 	}
 	if !db.Migrator().HasColumn(&domain.Product{}, "deleted_at") {
 		_ = db.Migrator().AddColumn(&domain.Product{}, "deleted_at")
@@ -195,19 +236,4 @@ func SeedInitialData(db *gorm.DB) {
 		}
 	}
 
-	var productCount int64
-	db.Model(&domain.Product{}).Count(&productCount)
-	if productCount == 0 {
-		products := []domain.Product{
-			{ID: 1, Name: "Ballpoint Pen - Blue (Box of 10)", Category: "Writing Instruments", Unit: "Box", UnitPrice: 120.00, Description: "High-quality blue ink ballpoint pens 0.7mm", Status: "ACTIVE"},
-			{ID: 2, Name: "A4 Printing Paper (80gsm - 500 Sheets)", Category: "Paper Products", Unit: "Ream", UnitPrice: 280.00, Description: "Premium white multipurpose copy paper", Status: "ACTIVE"},
-			{ID: 3, Name: "Permanent Marker - Black", Category: "Writing Instruments", Unit: "Piece", UnitPrice: 35.00, Description: "Chisel tip waterproof black permanent marker", Status: "ACTIVE"},
-			{ID: 4, Name: "Heavy Duty Stapler No. 10", Category: "Desk Supplies", Unit: "Piece", UnitPrice: 180.00, Description: "Durable metal body desk stapler", Status: "ACTIVE"},
-			{ID: 5, Name: "Sticky Notes 3x3 Yellow (100 Sheets)", Category: "Paper Products", Unit: "Pad", UnitPrice: 45.00, Description: "Standard self-adhesive memo pads", Status: "ACTIVE"},
-			{ID: 6, Name: "Expandable File Folder A4", Category: "Filing & Storage", Unit: "Piece", UnitPrice: 65.00, Description: "Heavy-duty poly expandable document organizer", Status: "ACTIVE"},
-			{ID: 7, Name: "12-Digit Desk Calculator", Category: "Electronics", Unit: "Piece", UnitPrice: 450.00, Description: "Dual-power solar and battery desktop calculator", Status: "ACTIVE"},
-			{ID: 8, Name: "Paper Clips (100 pcs/box)", Category: "Desk Supplies", Unit: "Box", UnitPrice: 25.00, Description: "Vinyl coated rust-resistant paper clips", Status: "ACTIVE"},
-		}
-		db.Create(&products)
-	}
 }

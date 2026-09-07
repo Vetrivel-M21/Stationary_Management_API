@@ -1,11 +1,9 @@
 package repository
 
 import (
-	"errors"
 	"fmt"
-	"strings"
-	"time"
 	"stationery-management/internal/domain"
+	"time"
 
 	"gorm.io/gorm"
 )
@@ -18,41 +16,11 @@ func NewRequestRepository(db *gorm.DB) *RequestRepository {
 	return &RequestRepository{db: db}
 }
 
-func (r *RequestRepository) FindOrCreateBranchByName(name string) (*domain.Branch, error) {
-	name = strings.TrimSpace(name)
-	if name == "" {
-		var defaultBranch domain.Branch
-		if err := r.db.First(&defaultBranch).Error; err == nil {
-			return &defaultBranch, nil
-		}
-		return nil, errors.New("branch name required")
-	}
-
-	var branch domain.Branch
-	if err := r.db.Where("LOWER(name) = ?", strings.ToLower(name)).First(&branch).Error; err == nil {
-		return &branch, nil
-	}
-
-	code := fmt.Sprintf("BR-%d", time.Now().UnixNano()%10000)
-	newBranch := domain.Branch{
-		Name:   name,
-		Code:   code,
-		Status: "ACTIVE",
-	}
-	if err := r.db.Create(&newBranch).Error; err != nil {
-		var defaultBranch domain.Branch
-		if err := r.db.First(&defaultBranch).Error; err == nil {
-			return &defaultBranch, nil
-		}
-		return nil, err
-	}
-	return &newBranch, nil
-}
 
 func (r *RequestRepository) GenerateUniqueRequestNo() string {
 	dateStr := time.Now().Format("20060102")
 	for i := 0; i < 20; i++ {
-		randVal := (time.Now().UnixNano()/1000 + int64(i*37))%9000 + 1000
+		randVal := (time.Now().UnixNano()/1000+int64(i*37))%9000 + 1000
 		candidate := fmt.Sprintf("REQ-%s-%d", dateStr, randVal)
 
 		var count int64
@@ -90,7 +58,7 @@ func (r *RequestRepository) FindByID(id uint) (*domain.Request, error) {
 	return &req, nil
 }
 
-func (r *RequestRepository) FindAll(branchID *uint, requesterID *uint, department string, status string, page, limit int) ([]domain.Request, int64, error) {
+func (r *RequestRepository) FindAll(branchID *uint, requesterID *uint, department string, status string, catalogOnly bool, page, limit int) ([]domain.Request, int64, error) {
 	var requests []domain.Request
 	var total int64
 
@@ -114,6 +82,9 @@ func (r *RequestRepository) FindAll(branchID *uint, requesterID *uint, departmen
 	}
 	if status != "" {
 		query = query.Where("status = ?", status)
+	}
+	if catalogOnly {
+		query = query.Where("EXISTS (SELECT 1 FROM request_items ri WHERE ri.request_id = requests.id AND ri.item_kind = 'CATALOG')")
 	}
 
 	query.Count(&total)
@@ -202,6 +173,20 @@ func (r *RequestRepository) GetDashboardMetrics() (*domain.DashboardMetrics, err
 	metrics.UnavailableItems = unavailSum.Sum
 
 	return &metrics, nil
+}
+
+func (r *RequestRepository) GetProductTotals(status string) ([]domain.ProductTotalDTO, error) {
+	var results []domain.ProductTotalDTO
+	query := r.db.Table("request_items").
+		Select("product_id, MAX(product_name) as product_name, MAX(product_unit) as unit, MAX(product_category) as category, SUM(requested_qty) as total_quantity").
+		Where("product_id IS NOT NULL").
+		Group("product_id").
+		Order("total_quantity desc")
+	if status != "" {
+		query = query.Joins("JOIN requests ON requests.id = request_items.request_id").Where("requests.status = ?", status)
+	}
+	err := query.Scan(&results).Error
+	return results, err
 }
 
 func (r *RequestRepository) UpdateItemUnitPrice(requestID, productID uint, unitPrice float64) error {

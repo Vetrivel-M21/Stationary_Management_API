@@ -2,6 +2,9 @@ package service
 
 import (
 	"errors"
+	"fmt"
+	"strings"
+
 	"stationery-management/internal/domain"
 	"stationery-management/internal/repository"
 )
@@ -51,22 +54,29 @@ func (s *ProductService) UpdateProduct(id uint, req *domain.UpdateProductRequest
 		return nil, errors.New("product not found")
 	}
 
-	if req.Name != "" {
+	var changes []string
+	if req.Name != "" && req.Name != product.Name {
+		changes = append(changes, fmt.Sprintf("Name: %q -> %q", product.Name, req.Name))
 		product.Name = req.Name
 	}
-	if req.Category != "" {
+	if req.Category != "" && req.Category != product.Category {
+		changes = append(changes, fmt.Sprintf("Category: %q -> %q", product.Category, req.Category))
 		product.Category = req.Category
 	}
-	if req.Unit != "" {
+	if req.Unit != "" && req.Unit != product.Unit {
+		changes = append(changes, fmt.Sprintf("Unit: %q -> %q", product.Unit, req.Unit))
 		product.Unit = req.Unit
 	}
-	if req.UnitPrice >= 0 {
+	if req.UnitPrice >= 0 && req.UnitPrice != product.UnitPrice {
+		changes = append(changes, fmt.Sprintf("UnitPrice: %.2f -> %.2f", product.UnitPrice, req.UnitPrice))
 		product.UnitPrice = req.UnitPrice
 	}
-	if req.Description != "" {
+	if req.Description != "" && req.Description != product.Description {
+		changes = append(changes, fmt.Sprintf("Description: %q -> %q", product.Description, req.Description))
 		product.Description = req.Description
 	}
-	if req.Status != "" {
+	if req.Status != "" && req.Status != product.Status {
+		changes = append(changes, fmt.Sprintf("Status: %q -> %q", product.Status, req.Status))
 		product.Status = req.Status
 	}
 
@@ -80,6 +90,7 @@ func (s *ProductService) UpdateProduct(id uint, req *domain.UpdateProductRequest
 		Action:     "UPDATE_PRODUCT",
 		EntityType: "PRODUCT",
 		EntityID:   product.Name,
+		Details:    strings.Join(changes, "; "),
 		IPAddress:  ip,
 	})
 
@@ -102,6 +113,7 @@ func (s *ProductService) DeleteProduct(id uint, actorID uint, actorName, ip stri
 		Action:     "SOFT_DELETE_PRODUCT",
 		EntityType: "PRODUCT",
 		EntityID:   product.Name,
+		Details:    fmt.Sprintf("Category: %s, Unit: %s, UnitPrice: %.2f, Status: %s", product.Category, product.Unit, product.UnitPrice, product.Status),
 		IPAddress:  ip,
 	})
 

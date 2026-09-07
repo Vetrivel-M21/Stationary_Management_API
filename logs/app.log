@@ -292,3 +292,476 @@
 2026/08/28 17:21:24.443810 [HTTP] 200 |    184.9907ms | 127.0.0.1 | GET /api/v1/requests/23
 2026/08/28 17:22:25.976794 Shutting down server gracefully...
 2026/08/28 17:22:26.055089 Server exiting successfully.
+2026/09/02 10:26:08.451483 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/02 10:26:11.417308 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/02 10:26:11.937340 Stationery Management System Server starting on port 8081...
+2026/09/02 10:26:21.233243 [ERROR] [MAF001] Invalid or expired token | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-02T10:26:21+05:30
+2026/09/02 10:26:21.239961 [HTTP] 401 |       6.718ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:26:21.397909 [ERROR] [MAF002] Invalid or expired token | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-02T10:26:21+05:30
+2026/09/02 10:26:21.400048 [HTTP] 401 |      2.1391ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:26:50.932782 [HTTP] 200 |     99.2379ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/02 10:26:52.733598 [HTTP] 200 |    1.0184907s | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:26:52.984583 [HTTP] 200 |     175.724ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:26:53.333651 [HTTP] 200 |    1.5341067s | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:26:54.006951 [HTTP] 200 |    593.7692ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:26:55.566425 [HTTP] 200 |    106.8424ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:26:55.828642 [HTTP] 200 |     89.0359ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:26:58.050032 [HTTP] 200 |     15.1495ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:26:58.226434 [HTTP] 200 |     25.6072ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:26:59.981003 [HTTP] 200 |     12.7612ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:27:03.233709 [HTTP] 200 |    118.6931ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:27:03.349084 [HTTP] 200 |     23.0449ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:27:10.730371 [HTTP] 200 |     51.7639ms | 127.0.0.1 | PUT /api/v1/products/10
+2026/09/02 10:27:10.781108 [HTTP] 200 |      6.9623ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:27:13.197589 [HTTP] 200 |    102.1126ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:27:13.379312 [HTTP] 200 |     66.2882ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:27:25.797467 [HTTP] 200 |    152.1046ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:27:26.110929 [HTTP] 200 |     81.9174ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:27:36.577876 [HTTP] 200 |     72.3526ms | 127.0.0.1 | PUT /api/v1/products/8
+2026/09/02 10:27:36.649434 [HTTP] 200 |      8.0574ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:27:52.860238 [HTTP] 200 |     86.1692ms | 127.0.0.1 | PUT /api/v1/products/9
+2026/09/02 10:27:53.007938 [HTTP] 200 |     76.1408ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:27:56.240756 [HTTP] 200 |     94.2067ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:27:56.647298 [HTTP] 200 |     90.6053ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:28:55.624966 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/02 10:29:07.542091 [ERROR] [HAL003] invalid credentials | File: handler/auth_handler.go | Func: stationery-management/internal/handler.(*AuthHandler).Login | Time: 2026-09-02T10:29:07+05:30
+2026/09/02 10:29:07.552061 [HTTP] 400 |     46.5674ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/02 10:29:23.206574 [HTTP] 200 |     90.2464ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/02 10:29:23.936270 [HTTP] 200 |    298.8498ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:29:27.681860 [HTTP] 200 |    623.0614ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/02 10:29:27.966062 [HTTP] 200 |    1.0295899s | 127.0.0.1 | GET /api/v1/users
+2026/09/02 10:29:28.284160 [HTTP] 200 |    4.2664762s | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:29:28.372779 [HTTP] 200 |    4.7502044s | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:29:28.391604 [HTTP] 200 |     500.843ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/02 10:29:28.735875 [HTTP] 200 |    482.5294ms | 127.0.0.1 | GET /api/v1/users
+2026/09/02 10:29:29.871007 [HTTP] 200 |    1.4698245s | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:29:40.768073 [HTTP] 200 |    120.2558ms | 127.0.0.1 | PUT /api/v1/users/16
+2026/09/02 10:29:40.897962 [HTTP] 200 |     92.6045ms | 127.0.0.1 | GET /api/v1/users
+2026/09/02 10:29:44.714435 [HTTP] 200 |       887.5µs | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/02 10:30:09.119760 [HTTP] 200 |      51.424ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/02 10:30:09.752807 [HTTP] 200 |    303.0896ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:30:09.849764 [HTTP] 200 |     65.2175ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:30:09.902626 [HTTP] 200 |    453.7608ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:10.354824 [HTTP] 200 |    403.5137ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:11.520610 [HTTP] 200 |     78.0498ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:11.635521 [HTTP] 200 |     20.3863ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:11.750619 [HTTP] 200 |    144.3947ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:11.866766 [HTTP] 200 |     30.5327ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:12.909864 [HTTP] 200 |      6.6737ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:30:12.978231 [HTTP] 200 |     27.7181ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:30:30.949317 [HTTP] 200 |     29.3263ms | 127.0.0.1 | PUT /api/v1/products/6
+2026/09/02 10:30:31.018440 [HTTP] 200 |     33.9534ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:30:34.191886 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/02 10:30:41.136340 [HTTP] 200 |     19.4279ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/02 10:30:41.415331 [HTTP] 200 |     66.6419ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:30:41.485487 [HTTP] 200 |     37.0444ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/02 10:30:41.570377 [HTTP] 200 |    208.4984ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:41.924560 [HTTP] 200 |    279.7628ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/02 10:30:47.037392 [HTTP] 200 |    105.6988ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:30:47.300667 [HTTP] 200 |      70.598ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:36:22.166182 [HTTP] 200 |      3.9449ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:36:27.254907 [HTTP] 200 |      3.6966ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:37:45.282785 [HTTP] 200 |      3.0683ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:39:33.759613 [HTTP] 200 |     17.7956ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:40:02.784450 [HTTP] 200 |      7.7094ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:40:04.779881 [HTTP] 200 |     47.7012ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:40:04.814926 [HTTP] 200 |     16.5041ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:40:08.179533 [HTTP] 200 |     34.3944ms | 127.0.0.1 | DELETE /api/v1/products/10
+2026/09/02 10:40:08.223564 [HTTP] 200 |     13.4305ms | 127.0.0.1 | GET /api/v1/products
+2026/09/02 10:40:10.133840 [HTTP] 200 |     28.0298ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:40:10.184741 [HTTP] 200 |      6.4025ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:40:12.832154 [HTTP] 200 |      25.199ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:40:25.890855 [HTTP] 200 |      9.1202ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:42:39.739849 [HTTP] 200 |    117.0598ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:44:48.531765 [HTTP] 200 |      7.5664ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:44:48.592197 [HTTP] 200 |     12.4915ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:44:51.127047 [HTTP] 200 |      9.6531ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:44:52.740706 [HTTP] 200 |      7.7909ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/02 10:45:32.888468 Shutting down server gracefully...
+2026/09/02 10:45:32.944143 Server exiting successfully.
+2026/09/03 18:24:27.016577 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/03 18:24:30.844309 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/03 18:24:32.261943 Stationery Management System Server starting on port 8081...
+2026/09/03 18:24:54.754940 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/03 18:24:55.294309 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/03 18:24:55.496513 Stationery Management System Server starting on port 8081...
+2026/09/03 18:24:55.497823 Listen error: listen tcp :8081: bind: Only one usage of each socket address (protocol/network address/port) is normally permitted.
+2026/09/03 18:26:07.458462 [HTTP] 200 |            0s | 127.0.0.1 | GET /health
+2026/09/03 18:26:07.743141 [HTTP] 200 |            0s | 127.0.0.1 | GET /
+2026/09/03 18:26:34.873871 [ERROR] [HAL001] invalid credentials | File: handler/auth_handler.go | Func: stationery-management/internal/handler.(*AuthHandler).Login | Time: 2026-09-03T18:26:34+05:30
+2026/09/03 18:26:34.873871 [HTTP] 400 |     17.6062ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/03 18:26:36.939501 [ERROR] [MAF002] Invalid authorization format | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-03T18:26:36+05:30
+2026/09/03 18:26:36.939501 [HTTP] 401 |            0s | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:26:45.507081 [ERROR] [HAL003] invalid credentials | File: handler/auth_handler.go | Func: stationery-management/internal/handler.(*AuthHandler).Login | Time: 2026-09-03T18:26:45+05:30
+2026/09/03 18:26:45.507081 [HTTP] 400 |      6.1367ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/03 18:27:28.198762 [HTTP] 200 |    168.3905ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/03 18:27:29.253262 [HTTP] 200 |    324.8964ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/03 18:27:29.355217 [HTTP] 200 |     68.7574ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/03 18:27:29.369531 [HTTP] 200 |    447.2278ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:27:29.918141 [HTTP] 200 |    486.9588ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:27:33.171213 [HTTP] 200 |      3.8545ms | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:27:33.213249 [HTTP] 200 |     13.4456ms | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:27:33.221575 [HTTP] 200 |     10.3457ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/03 18:27:33.304938 [HTTP] 200 |      9.6577ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/03 18:28:08.244402 [HTTP] 200 |     39.3975ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/03 18:28:25.743969 [HTTP] 200 |     27.1313ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:28:25.782464 [HTTP] 200 |     23.3459ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:28:26.843600 [HTTP] 200 |    102.8182ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:28:26.983056 [HTTP] 200 |     87.0857ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:28:27.014835 [HTTP] 200 |     82.7239ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:28:27.062789 [HTTP] 200 |     24.2903ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:28:35.273310 [HTTP] 200 |     62.2594ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/03 18:28:35.574609 [HTTP] 200 |      5.7092ms | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:28:44.436742 [ERROR] [HRC004] Error 1048 (23000): Column 'product_id' cannot be null | File: handler/request_handler.go | Func: stationery-management/internal/handler.(*RequestHandler).CreateRequest | Time: 2026-09-03T18:28:44+05:30
+2026/09/03 18:28:44.437582 [HTTP] 400 |     30.1844ms | 127.0.0.1 | POST /api/v1/requests
+2026/09/03 18:29:01.663766 [HTTP] 200 |     13.3857ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:29:01.714114 [HTTP] 200 |     16.5965ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/03 18:29:06.230800 [HTTP] 200 |      2.6106ms | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:29:06.265344 [HTTP] 200 |      4.0399ms | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:29:06.292482 [HTTP] 200 |     10.7858ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/03 18:29:06.313398 [HTTP] 200 |      2.0421ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/03 18:29:36.697462 [HTTP] 200 |    139.6972ms | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:29:37.739003 [HTTP] 200 |     17.7145ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/03 18:29:37.789817 [HTTP] 200 |     81.8958ms | 127.0.0.1 | GET /api/v1/products
+2026/09/03 18:29:38.200854 [HTTP] 200 |      4.8461ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 10:32:18.201456 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/04 10:32:41.721885 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/04 10:32:47.637917 Stationery Management System Server starting on port 8081...
+2026/09/04 10:33:22.036745 [ERROR] [MAF001] Invalid or expired token | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-04T10:33:22+05:30
+2026/09/04 10:33:22.147108 [HTTP] 401 |    597.4577ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:33:22.250558 [ERROR] [MAF002] Invalid or expired token | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-04T10:33:22+05:30
+2026/09/04 10:33:22.301850 [HTTP] 401 |    2.4008532s | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:33:24.079245 [ERROR] [MAF003] Invalid or expired token | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-04T10:33:24+05:30
+2026/09/04 10:33:24.117165 [HTTP] 401 |     37.9202ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:33:24.169270 [ERROR] [MAF004] Invalid or expired token | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-04T10:33:24+05:30
+2026/09/04 10:33:24.467230 [HTTP] 401 |    297.9595ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:33:46.841572 [HTTP] 200 |    4.1922367s | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 10:33:49.401806 [HTTP] 200 |    989.8109ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:33:50.194751 [HTTP] 200 |    329.6157ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:33:51.330188 [HTTP] 200 |    2.9141485s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:33:56.628926 [HTTP] 200 |    2.0837376s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:33:57.247259 [HTTP] 200 |    5.1483429s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:33:58.781242 [HTTP] 200 |     1.800562s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:33:59.640764 [HTTP] 200 |    2.6773578s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:34:00.267807 [HTTP] 200 |    173.8258ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:34:03.816099 [HTTP] 200 |    169.2579ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 10:34:04.928772 [HTTP] 200 |    232.8669ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 10:34:05.214249 [HTTP] 200 |    430.9266ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 10:34:06.374613 [HTTP] 200 |    335.1604ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 10:35:13.578933 [HTTP] 200 |    483.8609ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:35:13.926203 [HTTP] 200 |    202.9497ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:35:15.240265 [HTTP] 200 |    896.5919ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:35:16.073838 [HTTP] 200 |    461.4252ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:35:16.550119 [HTTP] 200 |    959.0189ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:35:17.732780 [HTTP] 200 |    224.6341ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:38:45.224436 [HTTP] 200 |    397.3143ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 10:38:45.759469 [HTTP] 200 |    930.3362ms | 127.0.0.1 | GET /api/v1/users
+2026/09/04 10:38:46.860408 [HTTP] 200 |    1.0627467s | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 10:38:48.405308 [HTTP] 200 |    1.4907361s | 127.0.0.1 | GET /api/v1/users
+2026/09/04 10:38:53.746759 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 10:39:00.612707 [HTTP] 200 |    967.1015ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 10:39:03.346371 [HTTP] 200 |    1.7825976s | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:39:06.729675 [HTTP] 200 |    3.2832481s | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:39:09.646355 [HTTP] 200 |    7.9616921s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:39:11.929939 [HTTP] 200 |    3.1324732s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:39:14.778169 [HTTP] 200 |    2.6669503s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:39:14.896819 [HTTP] 200 |    2.7871296s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:39:15.507302 [HTTP] 200 |    282.8799ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:39:15.734243 [HTTP] 200 |    4.3878539s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:43:06.445131 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 10:43:13.980479 [HTTP] 200 |    6.9450319s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:43:16.929609 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 10:43:21.578433 [ERROR] [MAF005] Authorization token required | File: middleware/auth_middleware.go | Func: main.main.JWTAuth.func9 | Time: 2026-09-04T10:43:21+05:30
+2026/09/04 10:43:22.111318 [HTTP] 401 |    3.6839288s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:43:34.945161 [HTTP] 200 |    373.1114ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 10:43:36.809643 [HTTP] 200 |    1.4631174s | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:43:40.290797 [HTTP] 200 |    2.9974789s | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 10:43:42.156564 [HTTP] 200 |     964.724ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 10:43:42.273502 [HTTP] 200 |    6.8824827s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:43:43.930858 [HTTP] 200 |    588.0325ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 10:43:45.711182 [HTTP] 200 |    2.3678377s | 127.0.0.1 | GET /api/v1/products
+2026/09/04 10:43:46.293702 [HTTP] 200 |    172.9785ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 10:43:47.604520 [HTTP] 200 |    4.2611761s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 10:57:02.268210 Shutting down server gracefully...
+2026/09/04 11:29:55.247870 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/04 11:30:00.657559 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/04 11:30:01.738221 Stationery Management System Server starting on port 8081...
+2026/09/04 11:31:47.673074 [HTTP] 200 |     3.576673s | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:31:48.895920 [HTTP] 200 |    615.8406ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:31:49.572702 [HTTP] 200 |    547.4553ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:31:54.139354 [HTTP] 200 |    5.7448159s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:31:58.491253 [HTTP] 200 |    4.1169667s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:01.608656 [HTTP] 200 |    1.7710569s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:03.158188 [HTTP] 200 |    569.0915ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:03.972005 [HTTP] 200 |    1.9469596s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:03.975025 [HTTP] 200 |    229.8271ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:04.329564 [HTTP] 200 |    765.5928ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:05.306599 [HTTP] 200 |    105.7315ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:18.258788 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:32:32.050991 [ERROR] [HAL001] invalid credentials | File: handler/auth_handler.go | Func: stationery-management/internal/handler.(*AuthHandler).Login | Time: 2026-09-04T11:32:32+05:30
+2026/09/04 11:32:32.050991 [HTTP] 400 |    725.6062ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:32:39.943709 [HTTP] 200 |    239.0302ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:32:40.542478 [HTTP] 200 |    152.9026ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:32:41.203376 [HTTP] 200 |    597.1893ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:32:43.026096 [HTTP] 200 |    2.5974469s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:44.338757 [HTTP] 200 |    348.1837ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:32:44.676516 [HTTP] 200 |      87.659ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:32:45.289975 [HTTP] 200 |    1.3004799s | 127.0.0.1 | GET /api/v1/users
+2026/09/04 11:32:45.687494 [HTTP] 200 |    152.3696ms | 127.0.0.1 | GET /api/v1/users
+2026/09/04 11:32:45.947830 [HTTP] 200 |    2.7449234s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:32:57.617192 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:33:03.269262 [ERROR] [HAL002] invalid credentials | File: handler/auth_handler.go | Func: stationery-management/internal/handler.(*AuthHandler).Login | Time: 2026-09-04T11:33:03+05:30
+2026/09/04 11:33:03.269262 [HTTP] 400 |     71.0458ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:33:07.153309 [ERROR] [HAL003] invalid credentials | File: handler/auth_handler.go | Func: stationery-management/internal/handler.(*AuthHandler).Login | Time: 2026-09-04T11:33:07+05:30
+2026/09/04 11:33:07.153309 [HTTP] 400 |      62.248ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:33:21.804366 [HTTP] 200 |     98.8185ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:33:22.208429 [HTTP] 200 |      56.675ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:33:22.672268 [HTTP] 200 |    368.3899ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:33:23.487014 [HTTP] 200 |     67.0465ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:33:23.585243 [HTTP] 200 |     1.385357s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:33:23.589301 [HTTP] 200 |    207.1016ms | 127.0.0.1 | GET /api/v1/users
+2026/09/04 11:33:23.703794 [HTTP] 200 |     20.2438ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:33:23.973581 [HTTP] 200 |     69.5403ms | 127.0.0.1 | GET /api/v1/users
+2026/09/04 11:33:25.268723 [HTTP] 200 |    1.3036987s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:33:35.088981 [HTTP] 200 |    181.5901ms | 127.0.0.1 | POST /api/v1/users/reset-password
+2026/09/04 11:33:38.054792 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:33:46.518870 [HTTP] 200 |    105.3525ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:33:47.015927 [HTTP] 200 |    116.8421ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:33:47.202485 [HTTP] 200 |    113.4653ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:33:48.199856 [HTTP] 200 |    1.2987501s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:33:49.335558 [HTTP] 200 |    1.0620724s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:33:50.048212 [HTTP] 200 |      8.0696ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:33:50.189157 [HTTP] 200 |     26.2686ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:33:50.236205 [HTTP] 200 |     58.8891ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:33:50.363153 [HTTP] 200 |     29.8679ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:34:39.250670 [HTTP] 201 |    564.1252ms | 127.0.0.1 | POST /api/v1/requests
+2026/09/04 11:34:40.226648 [HTTP] 200 |    684.6756ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:34:41.223729 [HTTP] 200 |    789.7333ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:34:47.332341 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:34:54.117533 [HTTP] 200 |     49.8081ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:34:54.763258 [HTTP] 200 |    345.3314ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:34:55.081019 [HTTP] 200 |    103.9526ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:34:55.568037 [HTTP] 200 |    1.1350547s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:34:57.348437 [HTTP] 200 |    714.7948ms | 127.0.0.1 | GET /api/v1/users
+2026/09/04 11:34:57.780130 [HTTP] 200 |     15.9706ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:34:57.841978 [HTTP] 200 |    2.0470887s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:34:57.863217 [HTTP] 200 |     82.0643ms | 127.0.0.1 | GET /api/v1/users
+2026/09/04 11:34:58.053132 [HTTP] 200 |     37.6451ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:35:13.303657 [HTTP] 200 |    119.1884ms | 127.0.0.1 | POST /api/v1/users/reset-password
+2026/09/04 11:35:15.932940 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:35:22.101908 [HTTP] 200 |     73.4522ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:35:22.400246 [HTTP] 200 |     118.804ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:35:22.557718 [HTTP] 200 |      75.622ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:35:22.782817 [HTTP] 200 |    503.3897ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:23.230252 [HTTP] 200 |    420.7324ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:24.648186 [HTTP] 200 |     204.657ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:24.844263 [HTTP] 200 |    117.2036ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:35.454543 [HTTP] 200 |    573.5519ms | 127.0.0.1 | POST /api/v1/requests/27/approve
+2026/09/04 11:35:35.712261 [HTTP] 200 |    148.4328ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:40.793616 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:35:48.677388 [HTTP] 200 |     279.514ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:35:49.093637 [HTTP] 200 |    135.5392ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:35:49.714266 [HTTP] 200 |    370.1522ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:35:51.124944 [HTTP] 200 |    2.1126432s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:52.879866 [HTTP] 200 |    1.6572885s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:53.582334 [HTTP] 200 |    1.5506252s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:54.782323 [HTTP] 200 |    1.0869827s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:35:58.376897 [HTTP] 200 |    172.1553ms | 127.0.0.1 | GET /api/v1/requests/27
+2026/09/04 11:36:09.247212 [HTTP] 200 |     590.067ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:10.226218 [HTTP] 200 |    897.9618ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:10.963339 [HTTP] 200 |     37.8845ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:36:11.135655 [HTTP] 200 |     34.6815ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:36:11.362177 [HTTP] 200 |    1.0844305s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:11.842767 [HTTP] 200 |    450.0227ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:12.394428 [HTTP] 200 |     78.1798ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:12.435598 [HTTP] 200 |     39.8919ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:12.450892 [HTTP] 200 |     22.7192ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:13.009467 [HTTP] 200 |    573.8698ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:13.107549 [HTTP] 200 |     98.0818ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:13.388040 [HTTP] 200 |     98.2007ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:13.418895 [HTTP] 200 |    897.1777ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:13.861836 [HTTP] 200 |    536.6919ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:19.802696 [HTTP] 200 |      40.717ms | 127.0.0.1 | GET /api/v1/requests/27
+2026/09/04 11:36:34.563574 [HTTP] 200 |      2.0175ms | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:36:41.028598 [HTTP] 200 |     54.4421ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:36:41.323227 [HTTP] 200 |    101.6965ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:36:41.626234 [HTTP] 200 |    220.3765ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:36:41.826798 [HTTP] 200 |    605.2674ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:43.687591 [HTTP] 200 |    1.7684304s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:44.054528 [HTTP] 200 |    448.1237ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:44.255046 [HTTP] 200 |     79.0866ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:44.302418 [HTTP] 200 |    230.9423ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:36:44.463502 [HTTP] 200 |     44.8524ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:03.332229 [HTTP] 200 |    795.5857ms | 127.0.0.1 | POST /api/v1/requests/27/deliver
+2026/09/04 11:37:03.994054 [HTTP] 200 |    586.1332ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:04.074289 [HTTP] 200 |     34.8867ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:07.776514 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:37:15.105433 [HTTP] 200 |     70.4632ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:37:15.741294 [HTTP] 200 |    302.8374ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:37:16.175298 [HTTP] 200 |    340.3499ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:37:17.259728 [HTTP] 200 |    1.7340571s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:21.192020 [HTTP] 200 |     66.1216ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:37:21.304945 [HTTP] 200 |     4.045217s | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:21.452002 [HTTP] 200 |     43.2219ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:37:24.367607 [HTTP] 200 |     95.1841ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:24.413217 [HTTP] 200 |    346.1067ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:24.447287 [HTTP] 200 |     40.1236ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:24.484491 [HTTP] 200 |    464.3212ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:24.524972 [HTTP] 200 |     74.2269ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:24.786820 [HTTP] 200 |    262.5199ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:24.889012 [HTTP] 200 |    686.0337ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:25.094213 [HTTP] 200 |    177.8777ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:29.456799 [HTTP] 200 |    103.1832ms | 127.0.0.1 | GET /api/v1/requests/27
+2026/09/04 11:37:33.731537 [HTTP] 200 |    431.3852ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:34.069078 [HTTP] 200 |    285.8294ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:37:37.152084 [HTTP] 200 |     13.6173ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:37:37.276862 [HTTP] 200 |      4.0424ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:37:37.288949 [HTTP] 200 |      2.0993ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:37:37.778635 [HTTP] 200 |     28.9873ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/04 11:38:05.559187 [HTTP] 201 |    490.7116ms | 127.0.0.1 | POST /api/v1/requests
+2026/09/04 11:38:06.205643 [HTTP] 200 |    450.7916ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:06.460121 [HTTP] 200 |    196.3014ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:12.606067 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:38:19.074096 [HTTP] 200 |     35.8371ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:38:19.401202 [HTTP] 200 |     67.1834ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:38:19.654847 [HTTP] 200 |     38.9729ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:38:19.718224 [HTTP] 200 |    385.2086ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:20.055370 [HTTP] 200 |    321.3967ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:21.322274 [HTTP] 200 |     74.2741ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:21.489191 [HTTP] 200 |      93.071ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:27.815264 [HTTP] 200 |    314.7973ms | 127.0.0.1 | POST /api/v1/requests/28/approve
+2026/09/04 11:38:27.937336 [HTTP] 200 |     68.9133ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:31.676982 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:38:38.636551 [HTTP] 200 |     83.4474ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:38:38.929026 [HTTP] 200 |     89.5273ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:38:39.018759 [HTTP] 200 |     31.6035ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:38:39.119015 [HTTP] 200 |    282.8289ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:39.536821 [HTTP] 200 |    377.7946ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:41.370651 [HTTP] 200 |    373.4745ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:41.717866 [HTTP] 200 |     80.5461ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:41.820087 [HTTP] 200 |    214.6905ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:42.000061 [HTTP] 200 |     31.9304ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:42.568620 [HTTP] 200 |     26.0634ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:38:42.659263 [HTTP] 200 |       6.307ms | 127.0.0.1 | GET /api/v1/products
+2026/09/04 11:38:44.683238 [HTTP] 200 |     112.765ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:44.752321 [HTTP] 200 |     24.5217ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:44.851699 [HTTP] 200 |    147.7708ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:45.162632 [HTTP] 200 |      31.562ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:38:50.098847 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 11:38:58.748254 [HTTP] 200 |     53.1178ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/04 11:38:59.135743 [HTTP] 200 |    132.6399ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:38:59.402080 [HTTP] 200 |    186.6114ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/04 11:38:59.681345 [HTTP] 200 |    635.3422ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:00.553163 [HTTP] 200 |    807.0691ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:01.845738 [HTTP] 200 |     64.0193ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:01.977854 [HTTP] 200 |    200.7489ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:02.086212 [HTTP] 200 |    125.0492ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:02.350256 [HTTP] 200 |    304.3187ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:02.383069 [HTTP] 200 |    600.7943ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:02.525987 [HTTP] 200 |     91.0166ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:02.625971 [HTTP] 200 |    839.6584ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:03.335802 [HTTP] 200 |    583.1804ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/04 11:39:05.666479 [HTTP] 200 |     50.2822ms | 127.0.0.1 | GET /api/v1/requests/28
+2026/09/04 11:39:12.835240 [HTTP] 200 |            0s | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/04 18:32:53.829446 Shutting down server gracefully...
+2026/09/04 18:32:53.847757 Server exiting successfully.
+2026/09/07 13:26:26.292982 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/07 13:26:27.407191 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/07 13:26:27.732177 Stationery Management System Server starting on port 8081...
+2026/09/07 13:27:47.602089 [HTTP] 200 |       99.49ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/07 13:27:48.660827 [HTTP] 200 |    424.1026ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/07 13:27:48.775032 [HTTP] 200 |     71.4787ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/07 13:27:48.826927 [HTTP] 200 |    517.5131ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:27:49.325597 [HTTP] 200 |    440.8984ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:27:52.358453 [HTTP] 200 |     21.2712ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:27:52.417898 [HTTP] 200 |     62.3061ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:27:52.443975 [HTTP] 200 |     35.2148ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:28:01.452582 [HTTP] 200 |       689.8µs | 127.0.0.1 | POST /api/v1/auth/logout
+2026/09/07 13:28:11.025698 [HTTP] 200 |     24.4802ms | 127.0.0.1 | POST /api/v1/auth/login
+2026/09/07 13:28:11.699131 [HTTP] 200 |    413.0078ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/07 13:28:12.207994 [HTTP] 200 |     449.077ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/07 13:28:12.238153 [HTTP] 200 |    920.6516ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:28:12.754599 [HTTP] 200 |    497.9833ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:28:17.480539 [HTTP] 200 |      6.5622ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:28:17.675342 [HTTP] 200 |     55.6433ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:28:25.353748 [HTTP] 200 |     55.2012ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:29:02.034530 [HTTP] 201 |     12.8575ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:29:02.097338 [HTTP] 200 |      13.718ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:29:04.670573 [HTTP] 200 |     68.8225ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/07 13:29:04.767741 [HTTP] 200 |     66.4381ms | 127.0.0.1 | GET /api/v1/dashboard/metrics
+2026/09/07 13:29:04.786664 [HTTP] 200 |    177.4552ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:29:05.119388 [HTTP] 200 |    287.9006ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:29:06.997192 [HTTP] 200 |      3.6261ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:29:07.049450 [HTTP] 200 |     11.7327ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:29:11.069383 [HTTP] 200 |     51.2701ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:30:04.045476 [HTTP] 200 |     11.1138ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:30:04.114302 [HTTP] 200 |     32.8222ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:30:07.650347 [HTTP] 200 |      6.1764ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:32:06.136151 [HTTP] 200 |     65.0605ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:32:06.827807 [HTTP] 200 |    210.9351ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:32:07.057399 [HTTP] 200 |    984.7478ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:32:07.657122 [HTTP] 200 |    268.5724ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:32:07.761423 [HTTP] 200 |    642.0779ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:32:07.957257 [HTTP] 200 |    235.1245ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:32:08.389119 [HTTP] 200 |    712.4127ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:32:08.461426 [HTTP] 200 |     44.4257ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:32:08.558559 [HTTP] 200 |    684.9898ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:32:08.757429 [HTTP] 200 |    167.8495ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:38:05.504672 [HTTP] 200 |     46.3514ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/07 13:38:05.549945 [HTTP] 200 |     11.6376ms | 127.0.0.1 | GET /api/v1/dashboard/audit-logs
+2026/09/07 13:38:06.784614 [HTTP] 200 |      9.0337ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:38:06.837273 [HTTP] 200 |      6.5446ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:38:21.564682 [HTTP] 200 |     11.0481ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:38:21.633492 [HTTP] 200 |       6.682ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:38:35.881002 [ERROR] [HBC001] Validation failed | File: handler/branch_handler.go | Func: stationery-management/internal/handler.(*BranchHandler).CreateBranch | Time: 2026-09-07T13:38:35+05:30
+2026/09/07 13:38:35.881515 [HTTP] 400 |       513.2µs | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:38:45.670340 Shutting down server gracefully...
+2026/09/07 13:38:45.671784 Server exiting successfully.
+2026/09/07 13:38:51.213498 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/07 13:38:51.838255 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/07 13:38:52.068427 Stationery Management System Server starting on port 8081...
+2026/09/07 13:39:23.925517 [ERROR] [HBC001] Error 1406 (22001): Data too long for column 'code' at row 1 | File: handler/branch_handler.go | Func: stationery-management/internal/handler.(*BranchHandler).CreateBranch | Time: 2026-09-07T13:39:23+05:30
+2026/09/07 13:39:23.926033 [HTTP] 400 |     16.6294ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:39:28.882064 [ERROR] [HBC002] Error 1406 (22001): Data too long for column 'code' at row 1 | File: handler/branch_handler.go | Func: stationery-management/internal/handler.(*BranchHandler).CreateBranch | Time: 2026-09-07T13:39:28+05:30
+2026/09/07 13:39:28.882856 [HTTP] 400 |      1.9794ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:39:29.796446 [ERROR] [HBC003] Error 1406 (22001): Data too long for column 'code' at row 1 | File: handler/branch_handler.go | Func: stationery-management/internal/handler.(*BranchHandler).CreateBranch | Time: 2026-09-07T13:39:29+05:30
+2026/09/07 13:39:29.809365 [HTTP] 400 |     21.3614ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:39:30.332164 [ERROR] [HBC004] Error 1406 (22001): Data too long for column 'code' at row 1 | File: handler/branch_handler.go | Func: stationery-management/internal/handler.(*BranchHandler).CreateBranch | Time: 2026-09-07T13:39:30+05:30
+2026/09/07 13:39:30.332944 [HTTP] 400 |     64.0929ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:39:43.297116 [ERROR] [HBC005] Error 1406 (22001): Data too long for column 'code' at row 1 | File: handler/branch_handler.go | Func: stationery-management/internal/handler.(*BranchHandler).CreateBranch | Time: 2026-09-07T13:39:43+05:30
+2026/09/07 13:39:43.297771 [HTTP] 400 |      1.7315ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:44:55.715861 Shutting down server gracefully...
+2026/09/07 13:44:55.716730 Server exiting successfully.
+2026/09/07 13:45:01.693806 [INIT] Logger initialized. Logging errors to terminal and file: logs/app.log
+2026/09/07 13:45:02.244726 AutoMigrate warning: Error 3780 (HY000): Referencing column 'branch_id' and referenced column 'id' in foreign key constraint 'fk_users_branch' are incompatible.
+2026/09/07 13:45:02.622583 Stationery Management System Server starting on port 8081...
+2026/09/07 13:45:36.209471 [HTTP] 201 |     19.5415ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:45:36.289736 [HTTP] 200 |     19.3668ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:45:46.317754 [HTTP] 201 |     31.0801ms | 127.0.0.1 | POST /api/v1/branches
+2026/09/07 13:45:46.364876 [HTTP] 200 |      9.2528ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:45:48.108588 [HTTP] 200 |    116.2796ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:45:48.190585 [HTTP] 200 |      7.8138ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:46:04.936564 [HTTP] 200 |      4.6031ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:47:07.515158 [HTTP] 200 |    439.6052ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:47:08.221738 [HTTP] 200 |    1.1461854s | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:47:23.218478 [HTTP] 201 |    146.6679ms | 127.0.0.1 | POST /api/v1/requests
+2026/09/07 13:47:23.695623 [HTTP] 200 |    252.6959ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:47:23.979338 [HTTP] 200 |    198.0478ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:47:28.364791 [HTTP] 200 |     12.6359ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:47:28.403873 [HTTP] 200 |      6.0548ms | 127.0.0.1 | GET /api/v1/products
+2026/09/07 13:47:49.657747 [HTTP] 200 |      4.9633ms | 127.0.0.1 | GET /api/v1/branches
+2026/09/07 13:48:18.567305 [HTTP] 201 |    301.9774ms | 127.0.0.1 | POST /api/v1/requests
+2026/09/07 13:48:19.114805 [HTTP] 200 |    282.9353ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:19.504891 [HTTP] 200 |    326.5596ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:20.115420 [HTTP] 200 |    120.4826ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:20.248712 [HTTP] 200 |    115.5515ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:25.100215 [HTTP] 200 |    100.4598ms | 127.0.0.1 | POST /api/v1/requests/30/approve
+2026/09/07 13:48:25.193628 [HTTP] 200 |      68.912ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:28.359868 [HTTP] 200 |     85.2257ms | 127.0.0.1 | POST /api/v1/requests/29/approve
+2026/09/07 13:48:28.483323 [HTTP] 200 |     77.8896ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:29.711568 [HTTP] 200 |    100.2045ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:29.816627 [HTTP] 200 |     38.4606ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:29.910863 [HTTP] 200 |    134.7132ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:48:29.997289 [HTTP] 200 |     16.1648ms | 127.0.0.1 | GET /api/v1/requests
+2026/09/07 13:51:56.353860 Shutting down server gracefully...
+2026/09/07 13:51:56.356721 Server exiting successfully.

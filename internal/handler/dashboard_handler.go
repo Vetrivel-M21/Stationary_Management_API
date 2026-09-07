@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"strconv"
 	"stationery-management/internal/repository"
 	"stationery-management/pkg/response"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -27,11 +27,26 @@ func (h *DashboardHandler) GetMetrics(c *gin.Context) {
 	response.JSONSuccess(c, 200, "Dashboard metrics retrieved", metrics)
 }
 
+func (h *DashboardHandler) GetProductTotals(c *gin.Context) {
+	status := c.Query("status")
+	totals, err := h.reqRepo.GetProductTotals(status)
+	if err != nil {
+		response.InternalError(c, err.Error())
+		return
+	}
+
+	response.JSONSuccess(c, 200, "Product totals retrieved", totals)
+}
+
 func (h *DashboardHandler) GetAuditLogs(c *gin.Context) {
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "20"))
+	entityType := c.Query("entityType")
+	action := c.Query("action")
+	startDate := c.Query("startDate")
+	endDate := c.Query("endDate")
 
-	logs, total, err := h.auditRepo.FindAll(page, limit)
+	logs, total, err := h.auditRepo.FindAll(page, limit, entityType, action, startDate, endDate)
 	if err != nil {
 		response.InternalError(c, err.Error())
 		return

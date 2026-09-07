@@ -69,7 +69,7 @@ func (s *slaService) GetDelayedOrders(departmentFilter string) ([]domain.Delayed
 		return nil, err
 	}
 
-	requests, _, err := s.reqRepo.FindAll(nil, nil, departmentFilter, "", 1, 1000)
+	requests, _, err := s.reqRepo.FindAll(nil, nil, departmentFilter, "", false, 1, 1000)
 	if err != nil {
 		return nil, err
 	}

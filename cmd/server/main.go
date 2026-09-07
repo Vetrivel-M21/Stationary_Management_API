@@ -49,7 +49,7 @@ func main() {
 	userSvc := service.NewUserService(userRepo, auditRepo)
 	branchSvc := service.NewBranchService(branchRepo, auditRepo)
 	productSvc := service.NewProductService(productRepo, auditRepo)
-	reqSvc := service.NewRequestService(reqRepo, userRepo, auditRepo)
+	reqSvc := service.NewRequestService(reqRepo, userRepo, productRepo, auditRepo)
 	monitorSvc := service.NewMonitorService(reqRepo, userRepo, emailSvc, auditRepo)
 	chatSvc := service.NewChatService(chatRepo, reqRepo, userRepo, auditRepo)
 	slaSvc := service.NewSlaService(slaRepo, reqRepo, auditRepo)
@@ -131,8 +131,7 @@ func main() {
 				admin.POST("/branches", branchHandler.CreateBranch)
 				admin.PUT("/branches/:id", branchHandler.UpdateBranch)
 
-				// Product Management (Admin-only update/delete)
-				admin.PUT("/products/:id", productHandler.UpdateProduct)
+				// Product Management (Admin-only delete)
 				admin.DELETE("/products/:id", productHandler.DeleteProduct)
 
 				// SLA Settings Management
@@ -147,8 +146,9 @@ func main() {
 			protected.GET("/products", productHandler.GetAllProducts)
 			protected.GET("/sla-settings", slaHandler.GetSlaSettings)
 
-			// Product Management (Admin + Agency create; update/delete are Admin-only)
+			// Product Management (Admin + Agency create/update; delete is Admin-only)
 			protected.POST("/products", middleware.RequireRoles("ADMIN", "AGENCY"), productHandler.CreateProduct)
+			protected.PUT("/products/:id", middleware.RequireRoles("ADMIN", "AGENCY"), productHandler.UpdateProduct)
 
 			// Request Workflow Routes
 			// Branch Requester: Create Request
@@ -169,12 +169,18 @@ func main() {
 			// Requester: Process Verification
 			protected.POST("/requests/:id/verify", middleware.RequireRoles("ADMIN", "BRANCH_REQUESTER"), reqHandler.ProcessVerification)
 
+			// Requester: Declare shop-item purchase (bill + payment proof)
+			protected.POST("/requests/:id/shop-items/verify", middleware.RequireRoles("ADMIN", "BRANCH_REQUESTER"), reqHandler.ProcessShopVerification)
+
 			// Monitor Routes
 			protected.GET("/monitor/delayed-orders", middleware.RequireRoles("ADMIN", "MONITOR"), slaHandler.GetDelayedOrders)
 			protected.POST("/monitor/remind", middleware.RequireRoles("ADMIN", "MONITOR"), monitorHandler.SendReminder)
 
 			// Dashboard Metrics
 			protected.GET("/dashboard/metrics", dashboardHandler.GetMetrics)
+
+			// Agency: Overall Orders (product totals)
+			protected.GET("/dashboard/product-totals", middleware.RequireRoles("ADMIN", "AGENCY"), dashboardHandler.GetProductTotals)
 		}
 	}
 

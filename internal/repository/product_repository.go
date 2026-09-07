@@ -23,6 +23,15 @@ func (r *ProductRepository) FindByID(id uint) (*domain.Product, error) {
 	return &product, nil
 }
 
+func (r *ProductRepository) FindByIDs(ids []uint) ([]domain.Product, error) {
+	var products []domain.Product
+	if len(ids) == 0 {
+		return products, nil
+	}
+	err := r.db.Where("id IN ?", ids).Find(&products).Error
+	return products, err
+}
+
 func (r *ProductRepository) FindAll(search, category string, page, limit int) ([]domain.Product, int64, error) {
 	var products []domain.Product
 	var total int64

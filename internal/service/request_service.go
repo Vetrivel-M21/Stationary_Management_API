@@ -8,13 +8,14 @@ import (
 )
 
 type RequestService struct {
-	reqRepo   *repository.RequestRepository
-	userRepo  *repository.UserRepository
-	auditRepo *repository.AuditRepository
+	reqRepo     *repository.RequestRepository
+	userRepo    *repository.UserRepository
+	productRepo *repository.ProductRepository
+	auditRepo   *repository.AuditRepository
 }
 
-func NewRequestService(reqRepo *repository.RequestRepository, userRepo *repository.UserRepository, auditRepo *repository.AuditRepository) *RequestService {
-	return &RequestService{reqRepo: reqRepo, userRepo: userRepo, auditRepo: auditRepo}
+func NewRequestService(reqRepo *repository.RequestRepository, userRepo *repository.UserRepository, productRepo *repository.ProductRepository, auditRepo *repository.AuditRepository) *RequestService {
+	return &RequestService{reqRepo: reqRepo, userRepo: userRepo, productRepo: productRepo, auditRepo: auditRepo}
 }
 
 func (s *RequestService) CreateRequest(requester *domain.User, dto *domain.CreateRequestDTO, actorName, ip string) (*domain.Request, error) {
@@ -29,25 +30,52 @@ func (s *RequestService) CreateRequest(requester *domain.User, dto *domain.Creat
 		department = requester.Department
 	}
 
+	if len(dto.Items) == 0 && len(dto.ShopItems) == 0 {
+		return nil, errors.New("At least one item (catalog or shop) is required.")
+	}
+
+	var productIDs []uint
+	for _, item := range dto.Items {
+		productIDs = append(productIDs, item.ProductID)
+	}
+	products, err := s.productRepo.FindByIDs(productIDs)
+	if err != nil {
+		return nil, err
+	}
+	productByID := make(map[uint]domain.Product, len(products))
+	for _, p := range products {
+		productByID[p.ID] = p
+	}
+
 	var items []domain.RequestItem
 	for _, item := range dto.Items {
+		p, ok := productByID[item.ProductID]
+		if !ok {
+			return nil, errors.New("one or more selected products are invalid")
+		}
+		pid := item.ProductID
 		items = append(items, domain.RequestItem{
-			ProductID:    item.ProductID,
+			ItemKind:        "CATALOG",
+			ProductID:       &pid,
+			ProductName:     p.Name,
+			ProductCategory: p.Category,
+			ProductUnit:     p.Unit,
+			RequestedQty:    item.RequestedQty,
+			UnitPrice:       item.UnitPrice,
+		})
+	}
+	for _, item := range dto.ShopItems {
+		items = append(items, domain.RequestItem{
+			ItemKind:     "SHOP",
+			ItemName:     item.ItemName,
 			RequestedQty: item.RequestedQty,
-			UnitPrice:    item.UnitPrice,
 		})
 	}
 
+	if dto.BranchID == 0 {
+		return nil, errors.New("Please select a valid target branch.")
+	}
 	targetBranchID := dto.BranchID
-	if targetBranchID == 0 && dto.BranchName != "" {
-		b, err := s.reqRepo.FindOrCreateBranchByName(dto.BranchName)
-		if err == nil && b != nil {
-			targetBranchID = b.ID
-		}
-	}
-	if targetBranchID == 0 {
-		targetBranchID = 1
-	}
 
 	req := &domain.Request{
 		RequestNo:       reqNo,
@@ -103,7 +131,9 @@ func (s *RequestService) GetRequests(user *domain.User, status string, page, lim
 		}
 	}
 
-	return s.reqRepo.FindAll(branchID, requesterID, department, status, page, limit)
+	catalogOnly := user.Role.Name == "AGENCY"
+
+	return s.reqRepo.FindAll(branchID, requesterID, department, status, catalogOnly, page, limit)
 }
 
 func (s *RequestService) GetRequestByID(id uint) (*domain.Request, error) {
@@ -189,6 +219,20 @@ func (s *RequestService) ProcessDelivery(requestID uint, agencyID uint, dto *dom
 		return nil, errors.New("request is not pending delivery")
 	}
 
+	hasCatalog := false
+	reqItemByProductID := make(map[uint]domain.RequestItem)
+	for _, it := range req.Items {
+		if it.ItemKind == "CATALOG" {
+			hasCatalog = true
+			if it.ProductID != nil {
+				reqItemByProductID[*it.ProductID] = it
+			}
+		}
+	}
+	if !hasCatalog {
+		return nil, errors.New("this request has no catalog items requiring delivery")
+	}
+
 	totalDeliveredMap := make(map[uint]int)
 	totalUnavailableMap := make(map[uint]int)
 
@@ -204,13 +248,17 @@ func (s *RequestService) ProcessDelivery(requestID uint, agencyID uint, dto *dom
 		totalDeliveredMap[item.ProductID] += item.DeliveredQty
 		totalUnavailableMap[item.ProductID] += item.UnavailableQty
 
+		ri := reqItemByProductID[item.ProductID]
 		deliveryItems = append(deliveryItems, domain.DeliveryItem{
-			ProductID:      item.ProductID,
-			ApprovedQty:    item.ApprovedQty,
-			DeliveredQty:   item.DeliveredQty,
-			UnavailableQty: item.UnavailableQty,
-			UnitPrice:      item.UnitPrice,
-			Remarks:        item.Remarks,
+			ProductID:       item.ProductID,
+			ProductName:     ri.ProductName,
+			ProductCategory: ri.ProductCategory,
+			ProductUnit:     ri.ProductUnit,
+			ApprovedQty:     item.ApprovedQty,
+			DeliveredQty:    item.DeliveredQty,
+			UnavailableQty:  item.UnavailableQty,
+			UnitPrice:       item.UnitPrice,
+			Remarks:         item.Remarks,
 		})
 
 		// Update RequestItem and Product unit prices in DB when agency enters price
@@ -222,6 +270,9 @@ func (s *RequestService) ProcessDelivery(requestID uint, agencyID uint, dto *dom
 
 	allFullyDelivered := true
 	for _, reqItem := range req.Items {
+		if reqItem.ItemKind == "SHOP" || reqItem.ProductID == nil {
+			continue
+		}
 		approvedQty := reqItem.RequestedQty
 		if reqItem.ApprovalItem != nil {
 			approvedQty = reqItem.ApprovalItem.ApprovedQty
@@ -229,8 +280,8 @@ func (s *RequestService) ProcessDelivery(requestID uint, agencyID uint, dto *dom
 		if approvedQty <= 0 {
 			continue
 		}
-		cumDelivered := totalDeliveredMap[reqItem.ProductID]
-		cumUnavailable := totalUnavailableMap[reqItem.ProductID]
+		cumDelivered := totalDeliveredMap[*reqItem.ProductID]
+		cumUnavailable := totalUnavailableMap[*reqItem.ProductID]
 		if cumDelivered+cumUnavailable < approvedQty {
 			allFullyDelivered = false
 			break
@@ -300,8 +351,19 @@ func (s *RequestService) ProcessVerification(requestID uint, verifier *domain.Us
 	}
 
 	now := time.Now()
-	req.Status = "COMPLETED"
-	req.CompletedAt = &now
+	hasShop := false
+	for _, it := range req.Items {
+		if it.ItemKind == "SHOP" {
+			hasShop = true
+			break
+		}
+	}
+	if !hasShop || req.ShopItemsVerifiedAt != nil {
+		req.Status = "COMPLETED"
+		req.CompletedAt = &now
+	} else {
+		req.Status = "AWAITING_SHOP_VERIFICATION"
+	}
 	req.PaymentProofUrl = dto.PaymentProofUrl
 
 	if err := s.reqRepo.Update(req); err != nil {
@@ -312,6 +374,67 @@ func (s *RequestService) ProcessVerification(requestID uint, verifier *domain.Us
 		UserID:     &verifierID,
 		UserName:   actorName,
 		Action:     "VERIFY_DELIVERY",
+		EntityType: "REQUEST",
+		EntityID:   req.RequestNo,
+		IPAddress:  ip,
+	})
+
+	return s.reqRepo.FindByID(req.ID)
+}
+
+func (s *RequestService) ProcessShopItemsVerification(requestID uint, verifier *domain.User, dto *domain.ProcessShopVerificationDTO, actorName, ip string) (*domain.Request, error) {
+	verifierID := verifier.ID
+	req, err := s.reqRepo.FindByID(requestID)
+	if err != nil {
+		return nil, errors.New("request not found")
+	}
+	if verifier.Role.Name == "BRANCH_REQUESTER" && req.Department != verifier.Department {
+		return nil, errors.New("This request does not belong to your department.")
+	}
+
+	hasShop, hasCatalog, approvedShopCount := false, false, 0
+	for _, it := range req.Items {
+		switch it.ItemKind {
+		case "SHOP":
+			hasShop = true
+			if it.ApprovalItem != nil && it.ApprovalItem.ApprovedQty > 0 {
+				approvedShopCount++
+			}
+		case "CATALOG":
+			hasCatalog = true
+		}
+	}
+	if !hasShop {
+		return nil, errors.New("this request has no shop items")
+	}
+	if approvedShopCount == 0 {
+		return nil, errors.New("no approved shop items to declare purchase for")
+	}
+	if req.ShopItemsVerifiedAt != nil {
+		return nil, errors.New("shop items have already been verified for this request")
+	}
+	if req.Status == "SUBMITTED" || req.Status == "REJECTED" || req.Status == "COMPLETED" {
+		return nil, errors.New("shop items cannot be verified in the current request status")
+	}
+
+	now := time.Now()
+	req.ShopBillUrls = dto.BillUrls
+	req.ShopPaymentProofUrls = dto.PaymentProofUrls
+	req.ShopItemsVerifiedAt = &now
+
+	if !hasCatalog || req.Status == "AWAITING_SHOP_VERIFICATION" {
+		req.Status = "COMPLETED"
+		req.CompletedAt = &now
+	}
+
+	if err := s.reqRepo.Update(req); err != nil {
+		return nil, err
+	}
+
+	s.auditRepo.Create(&domain.AuditLog{
+		UserID:     &verifierID,
+		UserName:   actorName,
+		Action:     "VERIFY_SHOP_ITEMS",
 		EntityType: "REQUEST",
 		EntityID:   req.RequestNo,
 		IPAddress:  ip,

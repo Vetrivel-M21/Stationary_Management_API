@@ -1,10 +1,10 @@
 package handler
 
 import (
-	"strconv"
 	"stationery-management/internal/domain"
 	"stationery-management/internal/service"
 	"stationery-management/pkg/response"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -144,4 +144,30 @@ func (h *RequestHandler) ProcessVerification(c *gin.Context) {
 	}
 
 	response.JSONSuccess(c, 200, "Delivery verification completed", req)
+}
+
+func (h *RequestHandler) ProcessShopVerification(c *gin.Context) {
+	idParam, _ := strconv.Atoi(c.Param("id"))
+	userID := c.MustGet("userID").(uint)
+	userEmail := c.MustGet("userEmail").(string)
+
+	var dto domain.ProcessShopVerificationDTO
+	if err := c.ShouldBindJSON(&dto); err != nil {
+		response.BadRequest(c, "Validation failed", err.Error())
+		return
+	}
+
+	verifier, err := h.userSvc.GetUserByID(userID)
+	if err != nil {
+		response.Unauthorized(c, "User session invalid")
+		return
+	}
+
+	req, err := h.reqSvc.ProcessShopItemsVerification(uint(idParam), verifier, &dto, userEmail, c.ClientIP())
+	if err != nil {
+		response.BadRequest(c, err.Error())
+		return
+	}
+
+	response.JSONSuccess(c, 200, "Shop item purchase verified successfully", req)
 }

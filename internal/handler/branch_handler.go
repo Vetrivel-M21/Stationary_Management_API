@@ -19,10 +19,11 @@ func NewBranchHandler(branchSvc *service.BranchService) *BranchHandler {
 
 func (h *BranchHandler) GetAllBranches(c *gin.Context) {
 	search := c.Query("search")
+	department := c.Query("department")
 	page, _ := strconv.Atoi(c.DefaultQuery("page", "1"))
 	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
 
-	branches, total, err := h.branchSvc.GetAllBranches(search, page, limit)
+	branches, total, err := h.branchSvc.GetAllBranches(search, department, page, limit)
 	if err != nil {
 		response.InternalError(c, err.Error())
 		return
